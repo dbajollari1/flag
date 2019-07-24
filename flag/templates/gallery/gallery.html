@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div style="padding-top: 15px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-sm-12">
+            <h3>Gallery</h3>
+        </div>
+    </div>
+</div>
+
+<div>
+    <div class="row">
+        <div class="col-lg-3">
+                <img src="{{ url_for('static', filename='images/gallery1.jpg') }}" alt="User Image" width="150px" height="150px">
+        </div>
+        <div class="col-lg-3">
+                <img src="{{ url_for('static', filename='images/gallery2.jpg') }}" alt="User Image" width="150px" height="150px">
+        </div>
+        <div class="col-lg-3">
+                <img src="{{ url_for('static', filename='images/gallery3.jpg') }}" alt="User Image" width="150px" height="150px">
+        </div>
+        <div class="col-lg-3">
+                <img src="{{ url_for('static', filename='images/gallery4.jpg') }}" alt="User Image" width="150px" height="150px">
+        </div>
+    </div>
+</div>
+
+{% endblock %}

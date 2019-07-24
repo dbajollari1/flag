@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div style="padding-top: 15px; padding-bottom: 10px;">
+    <div class="row">
+        <div class="col-sm-6">
+            <h3>Events</h3>
+        </div>
+        <div class="col-sm-6 text-right">
+            <a class="btn btn-primary" href={{ url_for('events.event') }} role="button">
+                Create New Event
+            </a>
+        </div>
+    </div>
+
+    {% for event in eventList %}
+        <div class="row">
+            <div class="event-item">
+                <div class="event-title">{{ event.eventTitle }}</div> 
+                <div class="event-detail" style="font-weight: bold;">Date: {{ event.eventDate }}</div> 
+                <div class="event-detail">Location: {{ event.eventLocation }}</div> 
+                <div class="event-detail">Details: {{ event.eventDesc }}</div> 
+            </div>
+        </div>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

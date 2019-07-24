@@ -1,0 +1,13 @@
+1. Event
+-------------
+CREATE TABLE IF NOT EXISTS "event" (
+"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+"title" VARCHAR,
+"description" TEXT,
+"location" VARCHAR,
+"eventDate" DATETIME,
+"status" VARCHAR,
+"createdBy" VARCHAR, 
+"createdOn" DATETIME
+);
+

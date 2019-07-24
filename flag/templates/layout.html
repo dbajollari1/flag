@@ -1,0 +1,116 @@
+{% from 'macros.html' import nav_link with context %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <meta name="description" content="Fort Lee Artist Guild">
+  <meta name="author" content="">
+
+  <link rel="icon" href="/static/images/icon.ico">
+
+  <title>Fort Lee Artist Guild</title>
+
+  <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+</head>
+
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <div class="container">
+      <a class="navbar-brand" href="/">
+        <img src="/static/images/logo.jpg" alt="" width="50px" height="50px">
+        <span class="d-none d-sm-inline">Fort Lee Artist Guild</span>
+      </a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive"
+        aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarResponsive">
+        <ul class="navbar-nav ml-auto">
+          {{ nav_link('home', 'Home') }}
+          {{ nav_link('events.events', 'Events') }}
+          {{ nav_link('gallery.gallery', 'Gallery') }}
+          {{ nav_link('public.about', 'About') }}
+          {{ nav_link('public.contact', 'Contact Us') }}
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Page Content -->
+  <div class="container" style="min-height: 500px;">
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    {% for m in messages %}
+    <div class="alert alert-warning alert-dismissible" role="alert">
+      <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      {{ m }}
+    </div>
+    {% endfor %}
+    {% endif %}
+    {% endwith %}
+
+    {% block content %}
+    {% endblock %}
+
+  </div>
+  <!-- /.container -->
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark" style="padding: 1rem !important;">
+    <div class="container">
+        <div class="row" style="color:white;">
+
+            <div class="col-sm-4">
+              <h4 style="color:lightblue;">Location</h4>
+              <p>
+                <a href="https://goo.gl/maps/iVhmAzEYue3JvERB9" target="_blank">
+                  <span style="line-height: 1.3rem;">Fort Lee Recreation Center</span><br>
+                  <span style="line-height: 1.3rem;">1500 8th St</span><br>
+                  <span style="line-height: 1.3rem;">Fort Lee, NJ 07024</span>
+                </a>
+              </p>
+            </div>
+
+            <div class="col-sm-4">
+              <h4 style="color:lightblue;">Email</h4>
+              <p>
+                <a href="mailto:someone@example.com" target="_top">someone@example.com</a>
+              </p>
+              <h4 style="color:lightblue;">Phone</h4>
+              <p>
+                <a href="tel:555-555-5555">555-555-5555</a> 
+              </p>
+            </div>
+                    
+            <div class="col-sm-4">
+                <h4 style="color:lightblue;">Follow Us</h4>
+                <p>
+                    <a href="https://facebook.com/flag" target="_blank"><i class="fa fa-facebook"></i>&nbsp;Follow us on Facebook</a>
+                </p>
+                <p>
+                    <a href="https://twitter.com/flag" target="_blank"><i class="fa fa-twitter"></i>&nbsp;Follow us on Twitter</a>
+                </p>
+              </div>
+
+    </div>
+    <!-- /.container -->
+  </footer>
+
+  <!-- Bootstrap core JavaScript -->
+  <script type=text/javascript src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+  <script type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+</body>
+
+</html>
