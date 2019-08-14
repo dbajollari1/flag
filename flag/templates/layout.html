@@ -14,9 +14,15 @@
   <title>Fort Lee Artist Guild</title>
 
   <!-- Bootstrap core CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/app.css') }}">
+
+  <script type=text/javascript src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+  <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script> -->
+  <script type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+  <script type=text/javascript src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
 
 </head>
 
@@ -109,8 +115,7 @@
   </footer>
 
   <!-- Bootstrap core JavaScript -->
-  <script type=text/javascript src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
-  <script type=text/javascript src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
 </body>
 
 </html>

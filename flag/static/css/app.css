@@ -36,18 +36,27 @@ body {
   padding: 20px;
   width: 100%;
   margin: 20px;
-  background-color:#d9f2d9;
+  background-color:#f1f8f1;
+  /* background: linear-gradient(to bottom, #f1f8f1, #d9f2d9); */
   box-shadow: 2px 2px #b3e6b3;
 }
 
 .event-title {
-  padding-top: 5px;
-  padding-bottom: 15px;
-  font-weight: bold;
+  padding-top: 0px;
+  padding-bottom: 2px;
   font-size: 1.5rem;
   color: darkolivegreen;
 }
 
 .event-detail {
   padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.col-form-label {
+  font-weight: 600;
+}
+
+.label {
+  font-weight: bold;
 }

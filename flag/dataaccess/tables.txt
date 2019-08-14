@@ -5,7 +5,9 @@ CREATE TABLE IF NOT EXISTS "event" (
 "title" VARCHAR,
 "description" TEXT,
 "location" VARCHAR,
-"eventDate" DATETIME,
+"eventDate" DATE,
+"startTime" VARCHAR,
+"endTime" VARCHAR,
 "status" VARCHAR,
 "createdBy" VARCHAR, 
 "createdOn" DATETIME

@@ -1,13 +1,19 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<script type="text/javascript">
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this event?');
+    }
+</script>
+
 <div style="padding-top: 15px; padding-bottom: 10px;">
     <div class="row">
         <div class="col-sm-6">
             <h3>Events</h3>
         </div>
         <div class="col-sm-6 text-right">
-            <a class="btn btn-primary" href={{ url_for('events.event') }} role="button">
+            <a class="btn btn-primary" href={{ url_for('events.event', event_id = 0) }} role="button">
                 Create New Event
             </a>
         </div>
@@ -16,10 +22,25 @@
     {% for event in eventList %}
         <div class="row">
             <div class="event-item">
-                <div class="event-title">{{ event.eventTitle }}</div> 
-                <div class="event-detail" style="font-weight: bold;">Date: {{ event.eventDate }}</div> 
-                <div class="event-detail">Location: {{ event.eventLocation }}</div> 
-                <div class="event-detail">Details: {{ event.eventDesc }}</div> 
+                <div class="event-title">
+                    {{ event.eventTitle }}
+                    <span style="float: right;font-weight:normal;font-size: 1rem;">
+                            <a  href={{ url_for('events.event', event_id = event.eventId) }} role="button">
+                                    Update
+                                </a> |
+                                <a onclick="return confirmDelete();" href={{ url_for('events.removeEvent', event_id = event.eventId) }} role="button">
+                                    Delete
+                                </a>
+                    </span>
+                </div> 
+                <div class="event-detail" style="padding-top: 15px;"><span class="label">Date:</span>{{ event.eventDate }} </div> 
+                <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div> 
+                <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div> 
+                <div class="event-detail"><span class="label">Details:</span><br>
+                    {% for line in event.eventDesc %}
+                        {{line}}<br>
+                    {% endfor %}
+                </div> 
             </div>
         </div>
     {% endfor %}
