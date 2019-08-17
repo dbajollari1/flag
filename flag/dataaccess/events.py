@@ -5,7 +5,7 @@ import datetime
 def getEvents():
     eventList=[]
     events = execute_sql(
-        "SELECT event.id, event.title, event.description, event.location, event.eventDate, event.startTime, event.endTime FROM event WHERE event.eventDate >= date('now') ORDER BY event.eventDate")
+        "SELECT event.id, event.title, event.description, event.location, event.eventDate, event.startTime, event.endTime FROM event WHERE eventDate >= date('now') ORDER BY eventDate")
 
     for row in events:
         event = Event()
@@ -36,7 +36,7 @@ def getEvent(event_id):
 def saveEvent(event): 
     sql = 'INSERT into event (title, description, location, eventDate, startTime, endTime, status, createdBy, createdOn) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)'
     execute_sql (sql, (event.eventTitle, event.eventDesc, event.eventLocation, 
-    event.eventDate, event.startTime, event.endTime, 'A', 'David',datetime.datetime.now()), True)
+    event.eventDate, event.startTime, event.endTime, 'A', 'David',datetime.datetime.utcnow()), True)
 
 def deleteEvent(event_id):
     sql = 'DELETE from event where id = ?'
@@ -45,4 +45,4 @@ def deleteEvent(event_id):
 def updateEvent(event):
     sql = 'UPDATE event set title = ? , description = ?, location = ? , eventDate = ?, startTime = ?, endTime = ?, status = ? , createdBy = ?, createdOn = ? WHERE id = ?'
     execute_sql(sql, (event.eventTitle, event.eventDesc, event.eventLocation, 
-    event.eventDate, event.startTime, event.endTime, 'A', 'David',datetime.datetime.now(), event.eventId),  True)
+    event.eventDate, event.startTime, event.endTime, 'A', 'David',datetime.datetime.utcnow(), event.eventId),  True)

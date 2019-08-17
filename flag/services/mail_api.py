@@ -8,7 +8,7 @@ from flask import current_app as app
 def send_email(subject, sender, recipients, text_body, html_body):
     fromName = "Fort Lee Artist Guild"
     fromEmail = "arianb1@hotmail.com"  # has to vailid email registered with mailject
-    toEmail = "dbajollari1@gmail.com"
+    toEmail = "dbajollari1@gmail.com" 
     api_key = app.config['MJ_APIKEY_PUBLIC']
     api_secret = app.config['MJ_APIKEY_PRIVATE']
     mailjet = Client(auth=(api_key, api_secret), version='v3.1')

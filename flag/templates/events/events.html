@@ -36,7 +36,7 @@
                 <div class="event-detail" style="padding-top: 15px;"><span class="label">Date:</span>{{ event.eventDate }} </div> 
                 <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div> 
                 <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div> 
-                <div class="event-detail"><span class="label">Details:</span><br>
+                <div class="event-detail"><span class="label" style="display: inline-block;padding-bottom:10px;">Details:</span><br>
                     {% for line in event.eventDesc %}
                         {{line}}<br>
                     {% endfor %}

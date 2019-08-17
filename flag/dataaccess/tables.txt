@@ -13,3 +13,26 @@ CREATE TABLE IF NOT EXISTS "event" (
 "createdOn" DATETIME
 );
 
+1. Event
+-------------
+CREATE TABLE IF NOT EXISTS "event" (
+"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+"title" VARCHAR,
+"description" TEXT,
+"location" TEXT,
+"eventdate" DATETIME,
+"status" VARCHAR,
+"createdby" VARCHAR,
+"createdon" DATETIME
+);
+
+2. Gallery
+-------------
+CREATE TABLE IF NOT EXISTS "gallery" (
+"photoId" INTEGER PRIMARY KEY AUTOINCREMENT,
+"photoTitle" VARCHAR,
+"photoFileName" VARCHAR,
+"uploadDate" DATETIME,
+"uploadBy" VARCHAR
+);
+# "photo" BLOB,

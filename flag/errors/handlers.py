@@ -20,3 +20,9 @@ def method_not_found(error):
 def internal_error(error):
         #db.session.rollback()
     return render_template('errors/500.html'), 500
+
+#custom error page
+@bp.route('/error')
+def error():
+    #email error to developer
+    return render_template('errors/error.html')

@@ -43,7 +43,11 @@ def event(event_id = 0):
             form.eventDate.data = datetime.datetime.today().strftime('%m/%d/%Y')
 
     if request.method == "POST":
-        if form.validate() == False:    
+        if form.validate() == False:
+            try:
+                form.eventDate.data = form.eventDate.data.strftime('%m/%d/%Y')
+            except:
+                pass
             return render_template('events/event.html',form = form) 
         #save to db
         try:
