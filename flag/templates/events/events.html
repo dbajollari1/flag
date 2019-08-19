@@ -7,17 +7,8 @@
     }
 </script>
 
-<div style="padding-top: 15px; padding-bottom: 10px;">
-    <div class="row">
-        <div class="col-sm-6">
-            <h3>Events</h3>
-        </div>
-        <div class="col-sm-6 text-right">
-            <a class="btn btn-primary" href={{ url_for('events.event', event_id = 0) }} role="button">
-                Create New Event
-            </a>
-        </div>
-    </div>
+{{ page_title('Events', '/event/0', 'Create New Event') }}
+
 
     {% for event in eventList %}
         <div class="row">
@@ -45,6 +36,5 @@
         </div>
     {% endfor %}
 
-</div>
 
 {% endblock %}

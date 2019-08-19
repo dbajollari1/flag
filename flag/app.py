@@ -3,6 +3,8 @@ from flag.config import Config
 #from flask_mail import Mail
 import logging
 import logging.handlers
+from flag.dataaccess.events import getUpcomingEvent
+from flag.events.models import Event
 
 app = Flask(__name__)
 app.config.from_object(Config)
@@ -35,6 +37,7 @@ logger.addHandler(handler)
 @app.route('/')
 @app.route('/home')
 def home():
-    return render_template('index.html')
+    event = getUpcomingEvent()
+    return render_template('index.html', event = event)
 
 

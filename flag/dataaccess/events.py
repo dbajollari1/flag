@@ -46,3 +46,15 @@ def updateEvent(event):
     sql = 'UPDATE event set title = ? , description = ?, location = ? , eventDate = ?, startTime = ?, endTime = ?, status = ? , createdBy = ?, createdOn = ? WHERE id = ?'
     execute_sql(sql, (event.eventTitle, event.eventDesc, event.eventLocation, 
     event.eventDate, event.startTime, event.endTime, 'A', 'David',datetime.datetime.utcnow(), event.eventId),  True)
+
+def getUpcomingEvent():
+    sql = "SELECT * from event where eventDate >= date('now') LIMIT 1"
+    row = execute_sql (sql,[], False, True)
+    event = Event()
+    event.eventTitle = row['title']
+    event.eventDesc = row['description']
+    event.eventLocation = row['location']
+    event.eventDate = datetime.datetime.strptime(row['eventdate'],'%Y-%m-%d').strftime('%m/%d/%Y')
+    event.startTime = row['startTime']
+    event.endTime = row['endTime']
+    return event

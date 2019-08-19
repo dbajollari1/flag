@@ -1,12 +1,54 @@
 {% extends "layout.html" %}
 {% block content %}
 
-  <div style="padding-top: 15px; padding-bottom: 10px;">
-    <div class="row">
-        <div class="col-sm-12">
-            <h3>Under Construction...</h3>
+
+<div class="row" style="padding-top:10px;">
+  <div class="col-lg-6">
+    <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-1.jpg" class="d-block w-100" alt="...">
         </div>
+        <div class="carousel-item" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-2.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-3.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-4.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-5.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-6.jpg" class="d-block w-100" alt="...">
+        </div>
+        <div class="carousel-item" data-interval="3000">
+          <img src="/static/images/carousel/Fgallery1-7.jpg" class="d-block w-100" alt="...">
+        </div>
+      </div>
+      <a class="carousel-control-prev" href="#carouselExampleControls" role="button" data-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+      </a>
+      <a class="carousel-control-next" href="#carouselExampleControls" role="button" data-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+      </a>
+
     </div>
+  </div>
+  <div class="col-lg-6" style="border:1px solid gray;padding:10px;">
+    <span style="font-weight:bold;font-size:1rem;">Upcoming Event</span>
+    <hr>
+        <div class="event-title">{{ event.eventTitle }}</div>
+        <div class="event-detail"><span class="label">Date:</span>{{ event.eventDate }} </div> 
+        <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div> 
+        <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div> 
+  </div>
+
 </div>
+
 
 {% endblock %}
