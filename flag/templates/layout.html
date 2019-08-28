@@ -46,6 +46,30 @@
           {{ nav_link('gallery.gallery', 'Gallery') }}
           {{ nav_link('public.about', 'About') }}
           {{ nav_link('public.contact', 'Contact Us') }}
+
+          {% if current_user.is_authenticated %}
+          <!-- Dropdown -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" style="color:#9ACD32;">
+              <i class="fa fa-user-circle"></i>&nbsp;{{ current_user.firstName }}
+            </a>
+            <div class="dropdown-menu">
+              <a class="dropdown-item" style="padding:10px;" href="#"><i class="fa fa-user-o"></i>&nbsp;&nbsp;My
+                Profile</a>
+              <a class="dropdown-item" style="padding:10px;" href="{{ url_for('gallery.gallery', filter='U') }}"><i class="fa fa-picture-o"></i>&nbsp;&nbsp;My
+                Gallery</a>
+              <hr style="margin-bottom: 0px;">
+              <a class="dropdown-item" style="padding:10px;" href="{{ url_for('auth.logout') }}"><i
+                  class="fa fa-sign-out" style="font-size: 1.4rem;"></i>&nbsp;&nbsp;Logout</a>
+            </div>
+          </li>
+          {% else %}
+          <li class="nav-item">
+            <a class="nav-link"
+              style="border: 1px solid #145a32; display:inline-block;padding-left: 5px; padding-right: 5px;;"
+              href="{{ url_for('auth.login') }}">Login</a>
+          </li>
+          {% endif %}
         </ul>
       </div>
     </div>
@@ -76,42 +100,44 @@
   <!-- Footer -->
   <footer class="py-5 bg-dark" style="padding: 1rem !important;">
     <div class="container">
-        <div class="row" style="color:white;">
+      <div class="row" style="color:white;">
 
-            <div class="col-sm-4">
-              <h4 style="color:lightblue;">Location</h4>
-              <p>
-                <a href="https://goo.gl/maps/iVhmAzEYue3JvERB9" target="_blank">
-                  <span style="line-height: 1.3rem;">Fort Lee Recreation Center</span><br>
-                  <span style="line-height: 1.3rem;">1500 8th St</span><br>
-                  <span style="line-height: 1.3rem;">Fort Lee, NJ 07024</span>
-                </a>
-              </p>
-            </div>
+        <div class="col-sm-4">
+          <h4 style="color:lightblue;">Location</h4>
+          <p>
+            <a href="https://goo.gl/maps/iVhmAzEYue3JvERB9" target="_blank">
+              <span style="line-height: 1.3rem;">Fort Lee Recreation Center</span><br>
+              <span style="line-height: 1.3rem;">1500 8th St</span><br>
+              <span style="line-height: 1.3rem;">Fort Lee, NJ 07024</span>
+            </a>
+          </p>
+        </div>
 
-            <div class="col-sm-4">
-              <h4 style="color:lightblue;">Email</h4>
-              <p>
-                <a href="mailto:someone@example.com" target="_top">someone@example.com</a>
-              </p>
-              <h4 style="color:lightblue;">Phone</h4>
-              <p>
-                <a href="tel:555-555-5555">555-555-5555</a> 
-              </p>
-            </div>
-                    
-            <div class="col-sm-4">
-                <h4 style="color:lightblue;">Follow Us</h4>
-                <p>
-                    <a href="https://facebook.com/flag" target="_blank"><i class="fa fa-facebook"></i>&nbsp;Follow us on Facebook</a>
-                </p>
-                <p>
-                    <a href="https://twitter.com/flag" target="_blank"><i class="fa fa-twitter"></i>&nbsp;Follow us on Twitter</a>
-                </p>
-              </div>
+        <div class="col-sm-4">
+          <h4 style="color:lightblue;">Email</h4>
+          <p>
+            <a href="mailto:someone@example.com" target="_top">someone@example.com</a>
+          </p>
+          <h4 style="color:lightblue;">Phone</h4>
+          <p>
+            <a href="tel:555-555-5555">555-555-5555</a>
+          </p>
+        </div>
 
-    </div>
-    <!-- /.container -->
+        <div class="col-sm-4">
+          <h4 style="color:lightblue;">Follow Us</h4>
+          <p>
+            <a href="https://facebook.com/flag" target="_blank"><i class="fa fa-facebook"></i>&nbsp;Follow us on
+              Facebook</a>
+          </p>
+          <p>
+            <a href="https://twitter.com/flag" target="_blank"><i class="fa fa-twitter"></i>&nbsp;Follow us on
+              Twitter</a>
+          </p>
+        </div>
+
+      </div>
+      <!-- /.container -->
   </footer>
 
   <!-- Bootstrap core JavaScript -->

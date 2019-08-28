@@ -1,2 +1,13 @@
 2019-08-17 14:32:22,108 ERROR arian : no such table: gallery 
 [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:37 in gallery]
+2019-08-25 13:30:14,893 ERROR arian : Could not build url for endpoint 'auth.logout'. Did you mean 'auth.logout_page' instead? [in /Users/elinashapiro/Documents/FLAG/flag/app.py:59 in home]
+2019-08-25 13:34:26,427 ERROR arian : unexpected '}', expected ')' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:37 in gallery]
+2019-08-26 22:15:17,649 ERROR dbajollari1@gmail.com : Unauthorized!!!! [in /Users/elinashapiro/Documents/FLAG/flag/events/routes.py:19 in event]
+2019-08-26 22:15:18,160 ERROR dbajollari1@gmail.com : Unauthorized!!!! [in /Users/elinashapiro/Documents/FLAG/flag/events/routes.py:19 in event]
+2019-08-26 22:15:18,542 ERROR dbajollari1@gmail.com : Unauthorized!!!! [in /Users/elinashapiro/Documents/FLAG/flag/events/routes.py:19 in event]
+2019-08-26 22:15:19,040 ERROR dbajollari1@gmail.com : Unauthorized!!!! [in /Users/elinashapiro/Documents/FLAG/flag/events/routes.py:19 in event]
+2019-08-27 20:30:07,655 ERROR arian : 'User' object has no attribute 'userEmail' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2019-08-27 20:30:11,767 ERROR arian : 'User' object has no attribute 'userEmail' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2019-08-27 20:30:49,493 ERROR arian : 'User' object has no attribute 'em' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2019-08-27 20:30:55,204 ERROR arian : 'User' object has no attribute 'em' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2019-08-27 20:31:04,565 ERROR arian : 'User' object has no attribute 'em' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]

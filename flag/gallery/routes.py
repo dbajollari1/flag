@@ -7,6 +7,7 @@ from flag.dataaccess.gallery import getPhotos, savePhoto, deletePhoto, getPhoto
 from flag.gallery.models import Photo
 from flask_paginate import Pagination #pip install -U flask-paginate
 from PIL import Image #pip install pillow
+from flask_login import login_required, current_user
 #import boto
 
 UPLOAD_FOLDER = 'flag/static/uploads/'
@@ -19,7 +20,13 @@ def get_pagePhotos(allPhotos, offset=0, per_page=6):
 def gallery():
     try:
         filterBy = request.args.get('filter', 'A')
-        photoList= getPhotos(filterBy,'arian') #currently we get all pages from database
+        userEmail = ''
+        if filterBy == 'U':
+            if not current_user.is_authenticated:
+                return redirect(url_for('auth.login', next=request.path + "?filter=U"))
+            userEmail = current_user.email
+
+        photoList= getPhotos(filterBy, userEmail) #currently we get all pages from database
         pageNumber = int(request.args.get('page', 1))    
         recordsPerPage = 6 #get from config
         offset = (pageNumber - 1) * recordsPerPage
@@ -38,13 +45,14 @@ def gallery():
         return redirect(url_for('errors.error'))
 
 @bpGallery.route('/uploadphoto', methods=['GET', 'POST'])
+@login_required
 def uploadphoto():
     if request.method == 'POST':
         imageFile = request.files['inputImg']
 
         if imageFile.filename == "":
             print("No filename")
-            return redirect(request.url)
+            return redirect(url_for('gallery.gallery', filter='U'))
 
         if allowed_image(imageFile.filename):
             filename = secure_filename(imageFile.filename)
@@ -65,13 +73,14 @@ def uploadphoto():
 
         fix_orientation(os.path.join(UPLOAD_FOLDER, filename))
 
-        photo = Photo(0, 'photo Title', filename, None, 'david') #, idata)
+        photo = Photo(0, 'photo title', filename, None, current_user.email) #, idata)
 
         savePhoto(photo) #save to database
-        return redirect("/gallery") #reload gallery page
+        return redirect(url_for('gallery.gallery', filter='U')) #reload gallery page
 
 
 @bpGallery.route('/deletePhoto/<id>')
+@login_required
 def removePhoto(id):
     photo = getPhoto(id)
     print(id + photo.photoFileName)

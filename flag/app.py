@@ -3,14 +3,25 @@ from flag.config import Config
 #from flask_mail import Mail
 import logging
 import logging.handlers
-from flag.dataaccess.events import getUpcomingEvent
+from flag.dataaccess.home import getUpcomingEvent
 from flag.events.models import Event
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import LoginManager
 
 app = Flask(__name__)
 app.config.from_object(Config)
 app.secret_key = app.config['SECRET_KEY']
 #mail = Mail(app)
 
+# init SQLAlchemy so we can use it later in our models
+db = SQLAlchemy()
+login_manager = LoginManager()
+
+# Initialize Plugings
+db.init_app(app)
+login_manager.init_app(app)
+
+# Register blueprints
 from flag.errors import bp as errors_bp
 app.register_blueprint(errors_bp)
 
@@ -34,10 +45,18 @@ handler.setLevel(logging.DEBUG)
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
+with app.app_context():
+    # Initialize Global db
+    db.create_all()
+
 @app.route('/')
 @app.route('/home')
 def home():
-    event = getUpcomingEvent()
-    return render_template('index.html', event = event)
+    try:
+        event = getUpcomingEvent()
+        return render_template('index.html', event = event)
+    except Exception as e:
+        logger.error(str(e), extra={'user': 'arian'})
+        return redirect(url_for('errors.error'))
 
 

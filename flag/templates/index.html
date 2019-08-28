@@ -1,6 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 
+{% if current_user.is_authenticated %}
+  Hi {{ current_user.firstName }}! {{ current_user.userRole }}
+{% endif %}
 
 <div class="row" style="padding-top:10px;">
   <div class="col-lg-6">
@@ -39,7 +42,7 @@
 
     </div>
   </div>
-  <div class="col-lg-6" style="border:1px solid gray;padding:10px;">
+  <div class="col-lg-6" style="border:1px solid gray;padding:10px;background-color: #f1f2f0">
     <span style="font-weight:bold;font-size:1rem;">Upcoming Event</span>
     <hr>
         <div class="event-title">{{ event.eventTitle }}</div>

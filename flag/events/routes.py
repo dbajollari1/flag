@@ -4,15 +4,21 @@ from flag.events.models import Event
 from flag.dataaccess.events import getEvents, saveEvent, getEvent, updateEvent, deleteEvent
 from flag.events.forms import EventForm
 import datetime
+from flask_login import login_required, current_user
+from flask import current_app as app
 
 @bpEvents.route('/events')
 def events():
     eventList= getEvents()
     return render_template('events/events.html', eventList = eventList)
 
-
 @bpEvents.route('/event/<event_id>', methods=('GET', 'POST'))
+@login_required
 def event(event_id = 0):
+    if current_user.userRole != 'A':
+        app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+        return redirect(url_for('errors.error'))
+    
     form = EventForm(request.form)
 
     fromchoices=[]
@@ -63,6 +69,10 @@ def event(event_id = 0):
     return render_template('events/event.html',form = form)
 
 @bpEvents.route('/removeEvent/<event_id>')
+@login_required
 def removeEvent(event_id = 0):
+    if current_user.userRole != 'A':
+        app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+        return redirect(url_for('errors.error'))
     deleteEvent(event_id)
     return redirect("/events") #reload page

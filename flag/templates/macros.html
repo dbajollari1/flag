@@ -17,11 +17,13 @@
       <h1 class="font-weight-light text-center text-lg-left">{{ title }}</h1>
   </div>
   {% if buttonUrl != '' %}
+  {% if current_user.is_authenticated and current_user.userRole == 'A' %}
   <div class="col-sm-6 text-right mt-2">
       <a class="btn btn-primary" href="{{ buttonUrl }}" role="button">
           {{ buttonValue }}
       </a>     
   </div>
+  {% endif %} 
   {% endif %} 
 </div>
 <hr class="mt-1 mb-4">

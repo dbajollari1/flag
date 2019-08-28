@@ -2,3 +2,4 @@ venv
 *.pyc
 config.py
 .vscode
+flag.log

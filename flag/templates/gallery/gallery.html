@@ -16,64 +16,73 @@
             $('#viewImageModal img').attr('src', $(this).attr('data-img-url'));
         });
     });
-    function ConfirmDelete()
-    {
+    function ConfirmDelete() {
         return confirm("Are you sure you want to delete?");
     }
 </script>
 
-    <div class="row">
-        <div class="col-sm-6">
-            <h1 class="font-weight-light text-center text-lg-left">Gallery</h1>
-        </div>
-        <div class="col-sm-6 text-right mt-2">
+<div class="row">
+    <div class="col-sm-6">
+        <h1 class="font-weight-light text-center text-lg-left">Gallery</h1>
+    </div>
+    <div class="col-sm-6 text-right mt-2">
+        {% if current_user.is_authenticated %}
             <!-- Button trigger modal -->
             <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadImageModal">
                 Upload Photo
             </button>
-        </div>
+        {% else %}
+            <a href={{ url_for('gallery.gallery', filter = 'U') }}>Login to upload image</a>
+        {% endif %}
     </div>
-    <hr class="mt-1 mb-4">
-    
-    <ul class="nav nav-tabs justify-content-end" id="myTab" role="tablist"  style="flex-flow:row; white-space:nowrap;">
-        <li class="nav-item">
-            <a class="nav-link {% if filterBy == 'A' %} active {% endif %}" id="home-tab" href="{{ url_for('gallery.gallery', filter='A') }}" role="tab"  aria-selected="true">All Photos</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link {% if filterBy == 'U' %} active {% endif %}" id="profile-tab"  href="{{ url_for('gallery.gallery', filter='U') }}" role="tab"  aria-selected="false">My Photos</a>
-        </li>
-    </ul>
+</div>
+<hr class="mt-1 mb-4">
 
-    <div>
-        
-        <div class="row">
-            {% for photo in photoList %}
+<ul class="nav nav-tabs justify-content-end" id="myTab" role="tablist" style="flex-flow:row; white-space:nowrap;">
+    <li class="nav-item">
+        <a class="nav-link {% if filterBy == 'A' %} active {% endif %}" id="home-tab"
+            href="{{ url_for('gallery.gallery', filter='A') }}" role="tab" aria-selected="true">All Photos</a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link {% if filterBy == 'U' %} active {% endif %}" id="profile-tab"
+            href="{{ url_for('gallery.gallery', filter='U') }}" role="tab" aria-selected="false">My Photos</a>
+    </li>
+</ul>
 
-            <div class="col-md-3">
-                <a id="viewPhoto" href="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"  
-                    data-toggle="modal" data-target="#viewImageModal" data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}" >
-                        <img src="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}" 
-                        class="img-fluid img-thumbnail" alt="alt text here" style="border-color:#d9f2d9; border-radius: 0; object-fit: cover; width: 100%; height: 200px;" />
-                </a>
-                <!-- <a id="viewPhoto" href="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"  
+<div>
+
+    <div class="row">
+        {% for photo in photoList %}
+
+        <div class="col-md-3">
+            <a id="viewPhoto" href="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"
+                data-toggle="modal" data-target="#viewImageModal"
+                data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}">
+                <img src="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"
+                    class="img-fluid img-thumbnail" alt="alt text here"
+                    style="border-color:#d9f2d9; border-radius: 0; object-fit: cover; width: 100%; height: 200px;" />
+            </a>
+            <!-- <a id="viewPhoto" href="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"  
                 data-toggle="modal" data-target="#viewImageModal" data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}" >
                     <img src="data:;base64,{{photo.photoImg}}" 
                     class="img-fluid img-thumbnail" alt="alt text here" style="border-color:#d9f2d9; border-radius: 0;" />
                 </a> -->
-               <figcaption class="figure-caption px-2 py-2 mb-3" style="background-color: transparent;border: solid 1px #d9f2d9;">
-                    {{ photo.uploadBy }}
-                    <span class="float-right">
-                        <a id="deletePhoto" onclick="return ConfirmDelete();" href={{ url_for('gallery.removePhoto', id=photo.photoId ) }} >[Delete]</a>
-                    </span>   
-                </figcaption>
-            </div>
-
-            {% endfor %}
+            <figcaption class="figure-caption px-2 py-2 mb-3"
+                style="background-color: transparent;border: solid 1px #d9f2d9;">
+                {{ photo.uploadBy }}
+                <span class="float-right">
+                    <a id="deletePhoto" onclick="return ConfirmDelete();"
+                        href={{ url_for('gallery.removePhoto', id=photo.photoId ) }}>[Delete]</a>
+                </span>
+            </figcaption>
         </div>
-        
-        <div class="row justify-content-center"> {{ pagination.links }} </div>
 
+        {% endfor %}
     </div>
+
+    <div class="row justify-content-center"> {{ pagination.links }} </div>
+
+</div>
 
 <!-- Modal -->
 <div class="modal fade" id="uploadImageModal" tabindex="-1" role="dialog" aria-labelledby="uploadImageModalTitle"
@@ -93,8 +102,8 @@
 
                     <input type="file" name="inputImg" id="inputImg" />
                     <div style="max-height: 400px; max-width: 500px; overflow: auto; padding: 10px 10px;">
-                        <img id="imgPreview" src="#" alt="your image" width="100%" height="100%" 
-                        style="display:none; orientation: unset;" />
+                        <img id="imgPreview" src="#" alt="your image" width="100%" height="100%"
+                            style="display:none; orientation: unset;" />
                     </div>
 
                 </div>
@@ -108,8 +117,8 @@
 </div>
 
 <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModal"
-    aria-hidden="true" >
-    <div class="modal-dialog modal-dialog-centered modal-lg" role="document" >
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header" style="padding: 0px;">
                 <!-- <h5 class="modal-title" id="exampleModalLongTitle">
@@ -119,15 +128,15 @@
                     <span aria-hidden="true" style="font-size: 2rem; padding-right:10px;">&times;</span>
                 </button>
             </div>
-            
-                <div class="modal-body">
-                        <img id="myImage" class="img-fluid" src="" alt="" />
 
-                </div>
-                <div class="modal-footer" style="padding: 5px;">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                </div>
-           
+            <div class="modal-body">
+                <img id="myImage" class="img-fluid" src="" alt="" />
+
+            </div>
+            <div class="modal-footer" style="padding: 5px;">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+
         </div>
     </div>
 </div>
