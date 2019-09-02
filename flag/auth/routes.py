@@ -3,10 +3,11 @@ from flask import redirect, render_template, flash, Blueprint, request, url_for
 from flask_login import login_required, logout_user, current_user, login_user
 from flask import current_app as app
 from werkzeug.security import generate_password_hash
-from flag.auth.forms import LoginForm, SignupForm
+from flag.auth.forms import LoginForm, SignupForm, ForgotForm, ResetPasswordForm
 from flag.auth.models import db, User
-from flag.app import login_manager
+from flag import login_manager
 from flag.auth import bpAuth
+from flag.services.mail_api import send_email
 
 @bpAuth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -88,3 +89,41 @@ def unauthorized():
     """Redirect unauthorized users to Login page."""
     flash('You must be logged in to view that page.')
     return redirect(url_for('auth.login', next=request.path))
+
+@bpAuth.route("/forgot", methods=['GET', 'POST'])
+def forgot():
+    forgot_form = ForgotForm(request.form)
+    linkSent = 'N'
+    if request.method == 'POST':
+        if forgot_form.validate():
+            linkSent = 'Y' # tell user link is sent even if not a valid OR unregistered user email
+            email = request.form.get('email')
+            existing_user = User.query.filter_by(email=email).first()
+            if not existing_user is None: #user exists, send reset link
+                token = existing_user.get_reset_password_token()
+                text_body=render_template('auth/reset_pwd_lnk.txt', user=existing_user, token=token)
+                send_email('Fort Lee Artist Guild - Reset Password', existing_user.email, text_body,'')
+    return render_template('auth/forgot.html',form=forgot_form, linkSent=linkSent)
+
+
+@bpAuth.route('/reset_pwd/<token>', methods=['GET', 'POST'])
+def reset_pwd(token):
+    try:
+        if current_user.is_authenticated:
+            return redirect(url_for('home'))
+
+        user = User.verify_reset_password_token(token)
+        if not user: #invalid token
+            return redirect(url_for('home'))
+        resetForm = ResetPasswordForm(request.form)
+
+        if request.method == 'POST':
+            if resetForm.validate():
+                user.set_password(resetForm.password.data)
+                db.session.commit()
+                flash('Your password has been reset.')
+                return redirect(url_for('home'))
+        return render_template('auth/reset_pwd.html', form=resetForm)
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
+        return redirect(url_for('errors.error'))

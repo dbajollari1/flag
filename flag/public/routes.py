@@ -21,7 +21,7 @@ def contact():
         inputName = form.inputName.data
         inputEmail = form.inputEmail.data
 
-        send_email('Fort Lee Artist Guild - Contact Request', 'abajollari@gmail.com', app.config['ADMINS'],
+        send_email('Fort Lee Artist Guild - Contact Request', app.config['ADMINS'],
         'Name: ' + inputName + '\n' + 'Email: ' + inputEmail +  '\n\n' + 'Message: ' + inputMessage, '')
 
         flash("Thank You. Your request has been received. We will respond to you as soon as possible.")

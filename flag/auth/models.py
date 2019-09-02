@@ -1,8 +1,10 @@
 """Database models."""
-from flag.app import db
+from flag import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
+from time import time
+import jwt # pip install flask-jwt
+from flask import current_app as app
 
 class User(UserMixin, db.Model):
     """Model for user accounts."""
@@ -51,4 +53,18 @@ class User(UserMixin, db.Model):
         return check_password_hash(self.password, password)
 
     def __repr__(self):
-        return '<User {}>'.format(self.username)
+        return '<User {}>'.format(self.email)
+
+    def get_reset_password_token(self, expires_in=60*60*24): # token expires in 1 day
+        return jwt.encode(
+            {'reset_password': self.id, 'exp': time() + expires_in},
+            app.config['SECRET_KEY'], algorithm='HS256').decode('utf-8')
+
+    @staticmethod
+    def verify_reset_password_token(token):
+        try:
+            id = jwt.decode(token, app.config['SECRET_KEY'],
+                            algorithms=['HS256'])['reset_password']
+        except:
+            return
+        return User.query.get(id)

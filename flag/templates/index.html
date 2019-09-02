@@ -1,10 +1,6 @@
 {% extends "layout.html" %}
 {% block content %}
 
-{% if current_user.is_authenticated %}
-  Hi {{ current_user.firstName }}! {{ current_user.userRole }}
-{% endif %}
-
 <div class="row" style="padding-top:10px;">
   <div class="col-lg-6">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
@@ -45,12 +41,13 @@
   <div class="col-lg-6" style="border:1px solid gray;padding:10px;background-color: #f1f2f0">
     <span style="font-weight:bold;font-size:1rem;">Upcoming Event</span>
     <hr>
-        <div class="event-title">{{ event.eventTitle }}</div>
-        <div class="event-detail"><span class="label">Date:</span>{{ event.eventDate }} </div> 
-        <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div> 
-        <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div> 
+    {% if event %}
+    <div class="event-title">{{ event.eventTitle }}</div>
+    <div class="event-detail"><span class="label">Date:</span>{{ event.eventDate }} </div> 
+    <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div> 
+    <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div> 
+    {% endif %}
   </div>
-
 </div>
 
 

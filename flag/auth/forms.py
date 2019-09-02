@@ -19,3 +19,13 @@ class LoginForm(Form):
     password = PasswordField('Password', [validators.DataRequired()])
     remember_me = BooleanField('Remember Me')
     submit = SubmitField('Log In')
+
+class ForgotForm(Form):
+    """Forgot Password Form."""
+    email = StringField('Email', [validators.Length(min=6, max=120), validators.Email()])
+    submit = SubmitField('Submit')
+
+class ResetPasswordForm(Form):
+    password = PasswordField('New Password', [ validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')])
+    confirm = PasswordField('Confirm New Password')
+    submit = SubmitField('Request Password Reset')
