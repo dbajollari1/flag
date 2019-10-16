@@ -36,3 +36,14 @@ CREATE TABLE IF NOT EXISTS "gallery" (
 "uploadBy" VARCHAR
 );
 # "photo" BLOB,
+
+3. Site Content
+-------------
+CREATE TABLE IF NOT EXISTS "sitecontent" (
+"id" INTEGER PRIMARY KEY AUTOINCREMENT,
+"title" VARCHAR,
+"description" TEXT,
+"isHtml" VARCHAR,
+"createdby" VARCHAR,
+"createdon" DATETIME
+);

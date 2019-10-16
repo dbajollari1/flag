@@ -1,13 +1,14 @@
 """Routes for user authentication."""
-from flask import redirect, render_template, flash, Blueprint, request, url_for
+from flask import redirect, render_template, flash, request, url_for, abort
 from flask_login import login_required, logout_user, current_user, login_user
 from flask import current_app as app
 from werkzeug.security import generate_password_hash
-from flag.auth.forms import LoginForm, SignupForm, ForgotForm, ResetPasswordForm
+from flag.auth.forms import LoginForm, SignupForm, ForgotForm, ResetPasswordForm, UserForm, ProfileForm
 from flag.auth.models import db, User
 from flag import login_manager
 from flag.auth import bpAuth
 from flag.services.mail_api import send_email
+import datetime
 
 @bpAuth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -30,6 +31,8 @@ def login():
             if user.check_password(password=password):
                 login_user(user, remember=login_form.remember_me.data)
                 next = request.args.get('next')
+                user.last_login = datetime.datetime.now()
+                db.session.commit()
                 return redirect(next or url_for('home')) # SUCCESSFULL LOGIN
         flash('Invalid username or password')
 
@@ -57,6 +60,7 @@ def signup():
                             email=email,
                             password=generate_password_hash(password, method='sha256'),
                             phone=phone,
+                            last_login = datetime.datetime.now(),
                             userRole='U')
                 db.session.add(user)
                 db.session.commit()
@@ -127,3 +131,58 @@ def reset_pwd(token):
     except Exception as e:
         app.logger.error(str(e), extra={'user': ''})
         return redirect(url_for('errors.error'))
+
+@bpAuth.route('/users')
+def users():
+    if not current_user.is_authenticated:
+        return redirect(url_for('home'))
+    if current_user.userRole != "A":
+        abort(401) # unauthorized
+
+    allUsers = User.query.all()
+    return render_template('auth/users.html', userList = allUsers)
+
+@bpAuth.route('/user/<user_id>')
+def user(user_id):
+    if not current_user.is_authenticated:
+        return redirect(url_for('home'))
+    if current_user.userRole != "A":
+        abort(401) # unauthorized
+
+    user = User.query.filter_by(id=user_id).first()
+
+    return render_template('auth/user.html', user = user)
+
+@bpAuth.route('/profile', methods=['GET', 'POST'])
+def profile():
+
+    profile_form = ProfileForm(request.form)
+    # POST: Sign user in
+    if request.method == 'POST':
+        if profile_form.validate():
+            # Get Form Fields
+            firstName = request.form.get('firstName')
+            lastName = request.form.get('lastName')
+            website = request.form.get('website')
+            phone = request.form.get('phone')
+            existing_user = User.query.filter_by(id=current_user.id).first()
+            if not existing_user is None:
+                existing_user.firstName=firstName
+                existing_user.lastName=lastName
+                existing_user.website=website
+                existing_user.phone=phone
+                db.session.commit()
+            flash('Profile successfully updated.')
+            return redirect(url_for('auth.profile'))
+    else:
+        if not current_user.is_authenticated:
+            return redirect(url_for('home'))
+
+        user = User.query.filter_by(id=current_user.id).first()
+        profile_form.firstName.data = user.firstName
+        profile_form.lastName.data = user.lastName
+        profile_form.phone.data = user.phone or ''
+        profile_form.website.data = user.website or ''
+        profile_form.membershipExpiryDate.data = user.memberExpireDate or ''
+
+    return render_template('auth/profile.html',form=profile_form)

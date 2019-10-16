@@ -11,3 +11,24 @@
 2019-08-27 20:30:49,493 ERROR arian : 'User' object has no attribute 'em' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
 2019-08-27 20:30:55,204 ERROR arian : 'User' object has no attribute 'em' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
 2019-08-27 20:31:04,565 ERROR arian : 'User' object has no attribute 'em' [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2019-09-07 18:29:25,253 ERROR  : (sqlite3.OperationalError) no such column: flasklogin-users.website
+[SQL: SELECT "flasklogin-users".id AS "flasklogin-users_id", "flasklogin-users"."firstName" AS "flasklogin-users_firstName", "flasklogin-users"."lastName" AS "flasklogin-users_lastName", "flasklogin-users".email AS "flasklogin-users_email", "flasklogin-users".password AS "flasklogin-users_password", "flasklogin-users".phone AS "flasklogin-users_phone", "flasklogin-users".website AS "flasklogin-users_website", "flasklogin-users"."userRole" AS "flasklogin-users_userRole", "flasklogin-users"."created_On" AS "flasklogin-users_created_On", "flasklogin-users".last_login AS "flasklogin-users_last_login", "flasklogin-users"."memberStartDate" AS "flasklogin-users_memberStartDate", "flasklogin-users"."memberExpireDate" AS "flasklogin-users_memberExpireDate" 
+FROM "flasklogin-users" 
+WHERE "flasklogin-users".id = ?]
+[parameters: ('1',)]
+(Background on this error at: http://sqlalche.me/e/e3q8) [in /Users/elinashapiro/Documents/FLAG/flag/app.py:15 in home]
+2019-09-07 18:34:47,024 ERROR  : (sqlite3.OperationalError) no such column: flasklogin-users.website
+[SQL: SELECT "flasklogin-users".id AS "flasklogin-users_id", "flasklogin-users"."firstName" AS "flasklogin-users_firstName", "flasklogin-users"."lastName" AS "flasklogin-users_lastName", "flasklogin-users".email AS "flasklogin-users_email", "flasklogin-users".password AS "flasklogin-users_password", "flasklogin-users".phone AS "flasklogin-users_phone", "flasklogin-users".website AS "flasklogin-users_website", "flasklogin-users"."userRole" AS "flasklogin-users_userRole", "flasklogin-users"."created_On" AS "flasklogin-users_created_On", "flasklogin-users".last_login AS "flasklogin-users_last_login", "flasklogin-users"."memberStartDate" AS "flasklogin-users_memberStartDate", "flasklogin-users"."memberExpireDate" AS "flasklogin-users_memberExpireDate" 
+FROM "flasklogin-users" 
+WHERE "flasklogin-users".id = ?]
+[parameters: ('1',)]
+(Background on this error at: http://sqlalche.me/e/e3q8) [in /Users/elinashapiro/Documents/FLAG/flag/app.py:15 in home]
+2019-09-07 18:38:15,796 ERROR  : (sqlite3.OperationalError) no such column: flasklogin-users.website
+[SQL: SELECT "flasklogin-users".id AS "flasklogin-users_id", "flasklogin-users"."firstName" AS "flasklogin-users_firstName", "flasklogin-users"."lastName" AS "flasklogin-users_lastName", "flasklogin-users".email AS "flasklogin-users_email", "flasklogin-users".password AS "flasklogin-users_password", "flasklogin-users".phone AS "flasklogin-users_phone", "flasklogin-users".website AS "flasklogin-users_website", "flasklogin-users"."userRole" AS "flasklogin-users_userRole", "flasklogin-users"."created_On" AS "flasklogin-users_created_On", "flasklogin-users".last_login AS "flasklogin-users_last_login", "flasklogin-users"."memberStartDate" AS "flasklogin-users_memberStartDate", "flasklogin-users"."memberExpireDate" AS "flasklogin-users_memberExpireDate" 
+FROM "flasklogin-users" 
+WHERE "flasklogin-users".id = ?]
+[parameters: ('1',)]
+(Background on this error at: http://sqlalche.me/e/e3q8) [in /Users/elinashapiro/Documents/FLAG/flag/app.py:15 in home]
+2019-10-13 14:19:04,369 ERROR  : Could not build url for endpoint 'auth.profile'. Did you mean 'auth.user' instead? [in /Users/elinashapiro/Documents/FLAG/flag/app.py:15 in home]
+2019-10-14 19:18:03,722 ERROR  : Encountered unknown tag 'endfor'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'. [in /Users/elinashapiro/Documents/FLAG/flag/app.py:21 in home]
+2019-10-14 20:59:52,447 ERROR  : no such table: siteamiccontent [in /Users/elinashapiro/Documents/FLAG/flag/app.py:21 in home]

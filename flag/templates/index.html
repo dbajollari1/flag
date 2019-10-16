@@ -1,8 +1,57 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<div class="row" style="padding-top:10px;">
-  <div class="col-lg-6">
+<div class="card-columns pt-3">
+
+  {% if event %}
+  <div class="card">
+    <div class="card-header" style="background-color: #ffffe6;">Upcomming Event</div>
+    <div class="card-body" style="padding-bottom: 0;">
+      <h5 class="card-title">{{ event.eventTitle }}</h5>
+      <p class="card-text">
+        <p style="margin: 0.2rem;">Date: {{ event.eventDate }} </p>
+        <p style="margin: 0.2rem;">Time: {{ event.startTime }} - {{ event.endTime }} </p>
+        <p style="margin: 0.2rem;">Location: {{ event.eventLocation }}</p>
+        <p class="pt-2" style="margin: 0.2rem;">
+          <a data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false"
+            aria-controls="collapseExample">
+            Details...
+          </a>
+          <div class="collapse p-2" id="collapseExample" style="background-color: #f2f2f2;">
+            {{ event.eventDesc | safe }}
+          </div>
+        </p>
+      </p>
+    </div>
+  </div>
+  {% endif %}
+
+  <div class="card">
+    <div class="card-header" style="background-color: #ecf9f2;">Make a Donation</div>
+    <div class="card-body" style="padding-bottom: 0;">
+      <p class="card-title">Your donation will help....</p>
+      <p class="card-text">
+        <form action="/donate" method="POST">
+          <label for="amount">Amount:</label>
+          <div class="input-group mb-3">
+
+            <div class="input-group-prepend">
+              <span class="input-group-text">$</span>
+            </div>
+            <input type="number" step="0.01" min=0 max=1000 class="form-control" id="amount" name="amount"
+              aria-label="Amount" required>
+          </div>
+
+          <label for="message">Message for the recipient (Optional):</label>
+          <input type="text" class="form-control" id="message" name="message" aria-label="message">
+          <br>
+          <button class="btn btn-success" name="donBtn" type="submit">Donate</button>
+        </form>
+      </p>
+    </div>
+  </div>
+
+  <div class="card">
     <div id="carouselExampleControls" class="carousel slide" data-ride="carousel">
       <div class="carousel-inner">
         <div class="carousel-item active" data-interval="3000">
@@ -35,19 +84,29 @@
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="sr-only">Next</span>
       </a>
-
     </div>
   </div>
-  <div class="col-lg-6" style="border:1px solid gray;padding:10px;background-color: #f1f2f0">
-    <span style="font-weight:bold;font-size:1rem;">Upcoming Event</span>
-    <hr>
-    {% if event %}
-    <div class="event-title">{{ event.eventTitle }}</div>
-    <div class="event-detail"><span class="label">Date:</span>{{ event.eventDate }} </div> 
-    <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div> 
-    <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div> 
-    {% endif %}
-  </div>
+
+  {% for sitecontent in siteContentList %}
+    <div class="card">
+      {% if sitecontent.siteContentTitle %}
+        <div class="card-header">{{ sitecontent.siteContentTitle }}</div>
+      {% endif %}
+      <div class="card-body">
+        <!-- <h5 class="card-title">Light card title</h5> -->
+        <p class="card-text">
+          {% if sitecontent.isHtml == 'N' %}
+            {% for line in sitecontent.siteContentDesc  %}
+              {{line | safe }}<br>
+            {% endfor %}
+          {% else %}
+            {{sitecontent.siteContentDesc | safe }}
+          {% endif %}
+        </p>
+      </div>
+    </div>
+  {% endfor %}
+
 </div>
 
 

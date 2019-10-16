@@ -12,33 +12,35 @@
 
 {% for event in eventList %}
 <div class="row">
-    <div class="event-item">
-        <div class="event-title">
-            {{ event.eventTitle }}
-            {% if current_user.is_authenticated and current_user.userRole == 'A' %}
-            <div style="float: right;font-weight:normal;font-size: 1rem;">
-                <a href={{ url_for('events.event', event_id = event.eventId) }} role="button">
-                    Update
-                </a> |
-                <a onclick="return confirmDelete();" href={{ url_for('events.removeEvent', event_id = event.eventId) }}
-                    role="button">
-                    Delete
-                </a>
+        <div class="card mb-3" style="width: 100%;">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ event.eventTitle }}
+                {% if current_user.is_authenticated and current_user.userRole == 'A' %}
+                <div style="float: right;font-weight:normal;font-size: 1rem;">
+                    <a href={{ url_for('events.event', event_id = event.eventId) }} role="button">
+                        Update
+                    </a> |
+                    <a onclick="return confirmDelete();" href={{ url_for('events.removeEvent', event_id = event.eventId) }}
+                        role="button">
+                        Delete
+                    </a>
+                </div>
+                {% endif %} 
+            </h5>
+            <div class="event-detail" style="padding-top: 15px;"><span class="label">Date:</span>{{ event.eventDate }}
             </div>
-            {% endif %} 
+            <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div>
+            <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div>
+            <div class="event-detail"><span class="label"
+                    style="display: inline-block;padding-bottom:10px;">Details:</span><br>
+                {% for line in event.eventDesc %}
+                {{line | safe }}<br>
+                {% endfor %}
+            </div>
         </div>
-        <div class="event-detail" style="padding-top: 15px;"><span class="label">Date:</span>{{ event.eventDate }}
-        </div>
-        <div class="event-detail"><span class="label">Time:</span> {{ event.startTime }} - {{ event.endTime }} </div>
-        <div class="event-detail"><span class="label">Location:</span> {{ event.eventLocation }}</div>
-        <div class="event-detail"><span class="label"
-                style="display: inline-block;padding-bottom:10px;">Details:</span><br>
-            {% for line in event.eventDesc %}
-            {{line}}<br>
-            {% endfor %}
         </div>
     </div>
-</div>
 {% endfor %}
 
 

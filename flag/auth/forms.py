@@ -1,6 +1,7 @@
 """Create form logic."""
-from wtforms import Form, StringField, PasswordField, validators, SubmitField, BooleanField
+from wtforms import Form, StringField, PasswordField, validators, SubmitField, BooleanField, DateField, HiddenField
 from wtforms.validators import ValidationError, DataRequired, Email, EqualTo, Length, Optional
+import datetime
 
 class SignupForm(Form):
     """User Signup Form."""
@@ -9,6 +10,7 @@ class SignupForm(Form):
     password = PasswordField('New Password', [ validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Confirm Password')
     phone = StringField('Phone Number')
+    website = StringField('Website')
     email = StringField('Email', [validators.Length(min=6, max=120), validators.Email()])
     submit = SubmitField('Register')
 
@@ -29,3 +31,27 @@ class ResetPasswordForm(Form):
     password = PasswordField('New Password', [ validators.DataRequired(),validators.EqualTo('confirm', message='Passwords must match')])
     confirm = PasswordField('Confirm New Password')
     submit = SubmitField('Request Password Reset')
+
+class UserForm(Form):
+    firstName = StringField('First Name',[validators.Length(min=3, max=50), validators.DataRequired()])                     
+    lastName = StringField('Last Name',[validators.Length(min=3, max=50), validators.DataRequired()])
+    phone = StringField('Phone Number')
+    website = StringField('Website')
+    email = StringField('Email', [validators.Length(min=6, max=120), validators.Email()])
+    memberStartDate =  StringField('Member Since')
+    memberExpireDate = StringField('Expiry Date')
+    dateJoined = StringField('Date Joined')
+    lastLogin = StringField('Last Login')
+    userRole = StringField('Role')
+    submit = SubmitField('Register')
+
+
+class ProfileForm(Form):
+    firstName = StringField('First Name',[validators.Length(min=3, max=50), validators.DataRequired()])                     
+    lastName = StringField('Last Name',[validators.Length(min=3, max=50), validators.DataRequired()])
+    phone = StringField('Phone Number')
+    website = StringField('Website')
+    # email = StringField('Email', [validators.Length(min=6, max=120), validators.Email()])
+    membershipExpiryDate = StringField('Membership Expiry Date')
+    membershipStatus = StringField('Membership Status')
+    submit = SubmitField('Update')

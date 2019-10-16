@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<script type="text/javascript">
+    function confirmDelete() {
+        return confirm('Are you sure you want to delete this content?');
+    }
+</script>
+
+{{ page_title('Site Content', '/sitecontent/0', 'Create New Content') }}
+
+
+{% for sitecontent in siteContentList %}
+<div class="row">
+    <div class="card mb-3" style="width: 100%;">
+        <div class="card-body">
+            <h5 class="card-title">
+                {{ sitecontent.siteContentTitle }}
+                {% if current_user.is_authenticated and current_user.userRole == 'A' %}
+                <div style="float: right;font-weight:normal;font-size: 1rem;">
+                    <a href={{ url_for('sitecontent.sitecontent', siteContent_id = sitecontent.siteContentId) }}
+                        role="button">
+                        Update
+                    </a> |
+                    <a onclick="return confirmDelete();"
+                        href={{ url_for('sitecontent.removeSiteContent', siteContent_id = sitecontent.siteContentId) }}
+                        role="button">
+                        Delete
+                    </a>
+                </div>
+                {% endif %}
+            </h5>
+
+            <div class="event-detail"><span class="label"
+                    style="display: inline-block;padding-bottom:10px;">Content:</span>
+                <br>
+                {% if sitecontent.isHtml == 'N' %}
+                    {% for line in sitecontent.siteContentDesc %}
+                        {{line | safe }}<br>
+                    {% endfor %}
+                {% else %}
+                    {{sitecontent.siteContentDesc | safe }}
+                {% endif %}
+                <br>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+
+{% endblock %}

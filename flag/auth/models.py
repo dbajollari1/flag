@@ -3,13 +3,15 @@ from flag import db
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from time import time
+import datetime
 import jwt # pip install flask-jwt
 from flask import current_app as app
+from sqlalchemy.sql import func
 
 class User(UserMixin, db.Model):
     """Model for user accounts."""
 
-    __tablename__ = 'flasklogin-users'
+    __tablename__ = 'flagusers'
 
     id = db.Column(db.Integer,
                    primary_key=True)
@@ -30,6 +32,10 @@ class User(UserMixin, db.Model):
                         index=False,
                         unique=False,
                         nullable=True)
+    website = db.Column(db.String(150),
+                        index=False,
+                        unique=False,
+                        nullable=True)                    
     userRole = db.Column(db.String(1),
                         index=False,
                         unique=False,
@@ -37,8 +43,17 @@ class User(UserMixin, db.Model):
     created_On = db.Column(db.DateTime,
                            index=False,
                            unique=False,
-                           nullable=True)
+                           nullable=False,
+                           default=datetime.datetime.now)
     last_login = db.Column(db.DateTime,
+                           index=False,
+                           unique=False,
+                           nullable=True)
+    memberStartDate = db.Column(db.DateTime,
+                           index=False,
+                           unique=False,
+                           nullable=True)
+    memberExpireDate = db.Column(db.DateTime,
                            index=False,
                            unique=False,
                            nullable=True)

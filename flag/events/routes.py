@@ -1,7 +1,7 @@
 from flask import render_template, redirect, url_for, request, flash, redirect
 from flag.events import bpEvents
 from flag.events.models import Event
-from flag.dataaccess.events import getEvents, saveEvent, getEvent, updateEvent, deleteEvent
+from flag.dataaccess.eventsDAO import getEvents, saveEvent, getEvent, updateEvent, deleteEvent
 from flag.events.forms import EventForm
 import datetime
 from flask_login import login_required, current_user

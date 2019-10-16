@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, url_for, flash, ses
 from flag.config import Config
 import logging
 import logging.handlers
-from flag.dataaccess.home import getUpcomingEvent
+from flag.dataaccess.homeDAO import getUpcomingEvent
 from flag.events.models import Event
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
@@ -27,7 +27,10 @@ def create_app():
 
     from flag.auth import bpAuth as auth_bp
     app.register_blueprint(auth_bp)
-    
+
+    from flag.sitecontent import bpSiteContent as siteContent_bp
+    app.register_blueprint(siteContent_bp)
+        
     from flag.public import bp as public_bp
     app.register_blueprint(public_bp)
 
@@ -45,5 +48,8 @@ def create_app():
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
+
+    with app.app_context():
+	    db.create_all()
 
     return app

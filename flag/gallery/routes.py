@@ -3,7 +3,7 @@ from flag.gallery import bpGallery
 from flask import current_app as app
 import os, datetime
 from werkzeug.utils import secure_filename
-from flag.dataaccess.gallery import getPhotos, savePhoto, deletePhoto, getPhoto
+from flag.dataaccess.galleryDAO import getPhotos, savePhoto, deletePhoto, getPhoto
 from flag.gallery.models import Photo
 from flask_paginate import Pagination #pip install -U flask-paginate
 from PIL import Image #pip install pillow

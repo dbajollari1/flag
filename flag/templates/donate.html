@@ -1,0 +1,52 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<!-- <input type="hidden" name="landing_page" value="billing">
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+  <input type="hidden" name="cmd" value="_s-xclick" />
+  <input type="hidden" name="hosted_button_id" value="5CQP5RPCF444J" />
+  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif" border="0" name="submit" title="PayPal - The safer, easier way to pay online!" alt="Donate with PayPal button" />
+  <img alt="" border="0" src="https://www.paypal.com/en_US/i/scr/pixel.gif" width="1" height="1" />
+  </form>
+  
+
+<hr>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post" target="_top">
+  <input type="hidden" name="cmd" value="_s-xclick">
+  <input type="hidden" name="hosted_button_id" value="RTFHPQKP5KAF4">
+  <input type="image" src="https://www.paypalobjects.com/en_US/i/btn/btn_buynowCC_LG.gif" border="0" name="submit" alt="PayPal - The safer, easier way to pay online!">
+  <img alt="" border="0" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" width="1" height="1">
+  </form> -->
+
+
+{% block head %}
+    <script src="https://js.stripe.com/v3/"></script>
+{% endblock %}
+
+<script type="text/javascript">
+
+  $( document ).ready(function() {
+
+    var stripe = Stripe('pk_test_nRpF3qQP6jxZeA13ymMY7QBl00FOgnQlKq');
+
+      stripe.redirectToCheckout({
+          // Make the id field from the Checkout Session creation API response
+          // available to this file, so you can provide it as parameter here
+          // instead of the {{CHECKOUT_SESSION_ID}} placeholder.
+          sessionId: "{{sid}}"
+      }).then(function (result) {
+          // If `redirectToCheckout` fails due to a browser or network
+          // error, display the localized error message to your customer
+          // using `result.error.message`.
+          document.getElementById("result_msg").innerHTML = result.error.message;
+      });
+      // location.replace("/");
+      history.replaceState("/donate"," ", "/home") //Go back to home page when user clicks broweser "Back" button
+    });
+</script>
+
+<div class="row">
+    <div id="result_msg">Processing...</div>
+</div>
+
+{% endblock %}
