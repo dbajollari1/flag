@@ -30,7 +30,10 @@ def create_app():
 
     from flag.sitecontent import bpSiteContent as siteContent_bp
     app.register_blueprint(siteContent_bp)
-        
+
+    from flag.membership import bpMembership as membership_bp
+    app.register_blueprint(membership_bp)
+
     from flag.public import bp as public_bp
     app.register_blueprint(public_bp)
 

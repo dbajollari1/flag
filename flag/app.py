@@ -4,6 +4,7 @@ from flag.dataaccess.homeDAO import getUpcomingEvent, getSiteContents
 from flag.events.models import Event
 import stripe # pip install stripe
 from flag.services.mail_api import send_email
+from flag.membership.routes import extendMembership
 
 app = create_app()
 stripe.api_key="sk_test_qvXYDnAVOqKg0jG4qAHyWuVT00IEP8pWcD"
@@ -50,13 +51,13 @@ def createSession(amount, message):
         line_items=[{
             'name': 'Donation', #'Membership Fee',
             'description': message, #'Annual Membership Fee',
-            'images': ['https://arianb1.pythonanywhere.com/static/images/logo.jpg'],
+            'images': [app.config['SITE_LOGO']],
             'amount': int(amount),
             'currency': 'usd',
             'quantity': 1
         }],
-        success_url='https://arianb1.pythonanywhere.com/thanks',
-        cancel_url='https://arianb1.pythonanywhere.com',
+        success_url = app.config['DONATE_SUCCESS_URL'],
+        cancel_url = app.config['HOME_PAGE'],
     )   
     return session.id
 
@@ -87,36 +88,39 @@ def flag_webhook():
       return "error", 400
 
     # Handle the event
-    if event.type == 'checkout.session.completed':
-        app.logger.error('checkout.session.completed', extra={'user': ''})
-    elif event.type == 'payment_intent.succeeded':
-        app.logger.error('payment_intent.succeeded', extra={'user': ''})
-        # payment_intent = event.data.object # contains a stripe.PaymentIntent
-        # handle_payment_intent_succeeded(payment_intent)
-    elif event.type == 'payment_method.attached':
-        app.logger.error('payment_method.attached', extra={'user': ''})
-        # payment_method = event.data.object # contains a stripe.PaymentMethod
-        #handle_payment_method_attached(payment_method)
+    if event.type == 'checkout.session.completed':  #event configured in sripe webhook
+        app.logger.error('checkout.session.completed', extra={'user': ''})  
     else:
-        # Unexpected event type
         return "Unexpected event type", 400
 
-    app.logger.error(event.data.object.customer_email, extra={'user': ''})
-    note= ' '
-    try:
-      note = event.data.object.display_items.custom.description
-    except:
-      app.logger.error('coud not get display_items.custom.description', extra={'user': ''})
-
-    cust = stripe.Customer.retrieve(event.data.object.customer) #get cust info
-
-    # email thanking donator
     refNbr = event.data.object.payment_intent
-    html_body=render_template('email/thanks_note.html', ref=refNbr)
-    send_email('Fort Lee Artist Guild - Donation Received', cust.email, '', html_body)
-    # email admin notifying of a donation
-    html_body=render_template('email/donation_note.html', message=note, donator=cust.email)
-    send_email('Fort Lee Artist Guild - New Donation', app.config['ADMINS'], '', html_body)
+
+    if event.data.object.submit_type == 'donate': #donation - email thanking donator
+
+      donatorMessage= ' '
+      try:
+        donatorMessage = event.data.object.display_items.custom.description
+      except:
+        app.logger.error('coud not get display_items.custom.description', extra={'user': ''})
+
+      cust = stripe.Customer.retrieve(event.data.object.customer) #get cust info
+      # Email donator
+      html_body=render_template('email/thanks_note.html', ref=refNbr)
+      send_email('Fort Lee Artist Guild - Donation Received', cust.email, '', html_body)
+      # Email admin notifying of a donation
+      html_body=render_template('email/donation_note.html', message=donatorMessage, donator=cust.email)
+      send_email('Fort Lee Artist Guild - New Donation', app.config['ADMINS'], '', html_body)
+
+    else: #submit_type == 'pay' - membership payment
+
+      userEmail = event.data.object.customer_email
+      extendMembership(userEmail) #update user's membership
+      # Notify user via email
+      html_body=render_template('email/thanks_note.html', ref=refNbr)
+      send_email('Fort Lee Artist Guild - Membership payment', userEmail, '', html_body)
+      # Nofify admin
+      html_body=render_template('email/donation_note.html', message='xxx', donator=userEmail)
+      send_email('Fort Lee Artist Guild - Membership payment received', app.config['ADMINS'], '', html_body)
 
     # app.logger.error("Received event: id={id}, type={type}, email={email}".format(id=event.id, type=event.type, email=event.data.object.customer_email))
     return 'OK', 200

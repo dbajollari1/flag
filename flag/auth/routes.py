@@ -183,6 +183,9 @@ def profile():
         profile_form.lastName.data = user.lastName
         profile_form.phone.data = user.phone or ''
         profile_form.website.data = user.website or ''
-        profile_form.membershipExpiryDate.data = user.memberExpireDate or ''
+        if user.memberExpireDate == None:
+            profile_form.membershipExpiryDate.data = ''
+        else:
+            profile_form.membershipExpiryDate.data = user.memberExpireDate.strftime('%d-%b-%Y')
 
     return render_template('auth/profile.html',form=profile_form)
