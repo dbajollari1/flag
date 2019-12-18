@@ -29,11 +29,11 @@
 <body>
 
   <!-- Navigation -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+  <nav class="navbar navbar-expand-lg navbar-light navbar-bg fixed-top">
     <div class="container">
       <a class="navbar-brand" href="/">
-        <img src="/static/images/logo.jpg" alt="" width="50px" height="50px">
-        <span class="d-none d-sm-inline">Fort Lee Artist Guild</span>
+        <img src="/static/images/logo1.png" alt="">
+        <!-- <span class="d-none d-sm-inline">Fort Lee Artist Guild</span> -->
       </a>
       <button class="navbar-toggler navbar-toggler-right collapsed" type="button" data-toggle="collapse"
         data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
@@ -52,11 +52,11 @@
           {% if current_user.is_authenticated %}
           <!-- Dropdown -->
           <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" style="color:#9ACD32;">
+            <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown" style="color:darkgreen;">
               <i class="fa fa-user-circle"></i>&nbsp;{{ current_user.firstName }}
             </a>
             <div class="dropdown-menu">
-              <a class="dropdown-item" style="padding:10px;" href="{{ url_for('auth.profile') }}"><i class="fa fa-user-o"></i>&nbsp;&nbsp;My
+              <a class="dropdown-item" style="padding:10px;" href="{{ url_for('auth.profile', user_id=0) }}"><i class="fa fa-user-o"></i>&nbsp;&nbsp;My
                 Profile</a>
               <a class="dropdown-item" style="padding:10px;" href="{{ url_for('gallery.gallery', filter='U') }}"><i
                   class="fa fa-picture-o"></i>&nbsp;&nbsp;My
@@ -77,7 +77,7 @@
           {% else %}
           <li class="nav-item">
             <a class="nav-link"
-              style="border: 1px solid #145a32; display:inline-block;padding-left: 15px; padding-right: 15px;border-radius:20px;"
+              style="border: 1px solid darkgreen; display:inline-block;padding-left: 15px; padding-right: 15px;border-radius:20px;"
               href="{{ url_for('auth.login') }}">Login</a>
           </li>
           {% endif %}
@@ -87,7 +87,7 @@
   </nav>
 
   <!-- Page Content -->
-  <div class="container" style="min-height: 500px;">
+  <div class="container" style="min-height: 500px;padding-top:10px;">
 
     {% with messages = get_flashed_messages() %}
     {% if messages %}
@@ -109,14 +109,14 @@
   <!-- /.container -->
 
   <!-- Footer -->
-  <footer class="py-5 bg-dark" style="padding: 1rem !important;">
+  <footer class="py-5" style="padding: 1rem !important;background-color: #C8C8CD;">
     <div class="container">
       <div class="row" style="color:white;">
 
         <div class="col-sm-4">
-          <h4 style="color:lightblue;">Location</h4>
+          <h4 style="color:gray;">Location</h4>
           <p>
-            <a href="https://goo.gl/maps/iVhmAzEYue3JvERB9" target="_blank">
+            <a href="https://goo.gl/maps/iVhmAzEYue3JvERB9" target="_blank" style="color:#1e3e6e;">
               <span style="line-height: 1.3rem;">Fort Lee Recreation Center</span><br>
               <span style="line-height: 1.3rem;">1500 8th St</span><br>
               <span style="line-height: 1.3rem;">Fort Lee, NJ 07024</span>
@@ -125,24 +125,24 @@
         </div>
 
         <div class="col-sm-4">
-          <h4 style="color:lightblue;">Email</h4>
+          <h4 style="color:gray;">Email</h4>
           <p>
-            <a href="mailto:someone@example.com" target="_top">someone@example.com</a>
+            <a href="mailto:someone@example.com" target="_top"  style="color:#1e3e6e;">someone@example.com</a>
           </p>
-          <h4 style="color:lightblue;">Phone</h4>
+          <h4 style="color:gray;">Phone</h4>
           <p>
-            <a href="tel:555-555-5555">555-555-5555</a>
+            <a href="tel:555-555-5555"  style="color:#1e3e6e;">555-555-5555</a>
           </p>
         </div>
 
         <div class="col-sm-4">
-          <h4 style="color:lightblue;">Follow Us</h4>
+          <h4 style="color:gray;">Follow Us</h4>
           <p>
-            <a href="https://facebook.com/flag" target="_blank"><i class="fa fa-facebook"></i>&nbsp;Follow us on
+            <a href="https://facebook.com/flag" target="_blank"  style="color:#1e3e6e;"><i class="fa fa-facebook"></i>&nbsp;Follow us on
               Facebook</a>
           </p>
           <p>
-            <a href="https://twitter.com/flag" target="_blank"><i class="fa fa-twitter"></i>&nbsp;Follow us on
+            <a href="https://twitter.com/flag" target="_blank"  style="color:#1e3e6e;"><i class="fa fa-twitter"></i>&nbsp;Follow us on
               Twitter</a>
           </p>
         </div>

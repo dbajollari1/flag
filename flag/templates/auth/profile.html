@@ -2,11 +2,24 @@
 
 {% block content %}
 
-{{ page_title('My Profile') }}
+<script type='text/javascript'>
+  function confirmRenew() 
+  { 
+    return confirm("Are you sure you want to renew membership?");
+  }
+</script>
+
+{% if screenMode == 'users' %}
+  {{ page_title('User Profile') }}
+{% else %}
+  {{ page_title('My Profile') }}
+{% endif %}
+
 
 <div class="col-lg-12">
   <form method="POST" role="form" action="profile">
     {{ form.csrf }}
+    <input type="hidden" name="user_id" id="user_id" value="{{ form.user_id.data }}">
 
     {% if form.errors %}
     <div class="alert alert-warning" style="color: #DC143C; padding-bottom: 0;">
@@ -66,13 +79,17 @@
               form.membershipExpiryDate.label
             }}</label>
       <div class="col-lg-8">
-        
-          <input type="tel" class="form-control" id="membershipExpiryDate" name="membershipExpiryDate"
-            value="{{ form.membershipExpiryDate.data }}" placeholder="" readonly
-            style="background-color: lightgrey; width: 150px;float:left;" />
-          &nbsp;&nbsp;
-          <a class="btn btn-success" role="button" href="/membership">Renew Memebership</a>
-        
+
+        <input type="tel" class="form-control" id="membershipExpiryDate" name="membershipExpiryDate"
+          value="{{ form.membershipExpiryDate.data }}" placeholder="" readonly
+          style="background-color: lightgrey; width: 150px;float:left;" />
+        &nbsp;&nbsp;
+        {% if screenMode == 'users' %}
+            <a class="btn btn-success" onclick="return confirmRenew();" role="button" href="/renew">Renew Memebership</a>
+        {% else %}
+            <a class="btn btn-success" role="button" href="/membership">Renew Memebership</a>
+        {% endif %}
+
       </div>
     </div>
 
@@ -84,6 +101,5 @@
 
   </form>
 </div>
-
 
 {% endblock %}

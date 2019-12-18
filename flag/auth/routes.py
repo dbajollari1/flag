@@ -142,20 +142,20 @@ def users():
     allUsers = User.query.all()
     return render_template('auth/users.html', userList = allUsers)
 
-@bpAuth.route('/user/<user_id>')
-def user(user_id):
-    if not current_user.is_authenticated:
-        return redirect(url_for('home'))
-    if current_user.userRole != "A":
-        abort(401) # unauthorized
+# @bpAuth.route('/user/<user_id>')
+# def user(user_id):
+#     if not current_user.is_authenticated:
+#         return redirect(url_for('home'))
+#     if current_user.userRole != "A":
+#         abort(401) # unauthorized
 
-    user = User.query.filter_by(id=user_id).first()
+#     user = User.query.filter_by(id=user_id).first()
 
-    return render_template('auth/user.html', user = user)
+#     return render_template('auth/user.html', user = user)
 
-@bpAuth.route('/profile', methods=['GET', 'POST'])
-def profile():
-
+@bpAuth.route('/profile/<user_id>', methods=['GET', 'POST'])
+def profile(user_id = 0):
+    screenMode = 'profile' #came from profile screen
     profile_form = ProfileForm(request.form)
     # POST: Sign user in
     if request.method == 'POST':
@@ -165,7 +165,8 @@ def profile():
             lastName = request.form.get('lastName')
             website = request.form.get('website')
             phone = request.form.get('phone')
-            existing_user = User.query.filter_by(id=current_user.id).first()
+            userId = request.form.get('user_id')
+            existing_user = User.query.filter_by(id=userId).first()
             if not existing_user is None:
                 existing_user.firstName=firstName
                 existing_user.lastName=lastName
@@ -173,19 +174,26 @@ def profile():
                 existing_user.phone=phone
                 db.session.commit()
             flash('Profile successfully updated.')
-            return redirect(url_for('auth.profile'))
+            return redirect(url_for('auth.profile', user_id = userId ))
     else:
         if not current_user.is_authenticated:
             return redirect(url_for('home'))
+        if int(user_id) > 0:#check to see if they came from users
+            screenMode = 'users'
+            if current_user.userRole != "A":
+                abort(401) # unauthorized
+        else: 
+            user_id = current_user.id
 
-        user = User.query.filter_by(id=current_user.id).first()
+        user = User.query.filter_by(id=user_id).first()
         profile_form.firstName.data = user.firstName
         profile_form.lastName.data = user.lastName
         profile_form.phone.data = user.phone or ''
         profile_form.website.data = user.website or ''
+        profile_form.user_id.data = user.id
         if user.memberExpireDate == None:
             profile_form.membershipExpiryDate.data = ''
         else:
             profile_form.membershipExpiryDate.data = user.memberExpireDate.strftime('%d-%b-%Y')
 
-    return render_template('auth/profile.html',form=profile_form)
+    return render_template('auth/profile.html',form=profile_form, screenMode = screenMode)

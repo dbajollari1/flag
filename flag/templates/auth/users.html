@@ -46,7 +46,7 @@
             <td>{{ user.created_On.strftime('%d-%b-%Y') }}</td>
             <td>{{ user.last_login.strftime('%d-%b-%Y') }}</td>
             <td>
-                <a href="{{ url_for('auth.user', user_id = user.id) }}" role="button">
+                <a href="{{ url_for('auth.profile', user_id = user.id) }}" role="button">
                     Edit
                 </a>
             </td>

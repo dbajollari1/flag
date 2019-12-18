@@ -52,6 +52,7 @@ class ProfileForm(Form):
     phone = StringField('Phone Number')
     website = StringField('Website')
     # email = StringField('Email', [validators.Length(min=6, max=120), validators.Email()])
+    user_id = HiddenField()
     membershipExpiryDate = StringField('Membership Expiry Date')
     membershipStatus = StringField('Membership Status')
     submit = SubmitField('Update')
