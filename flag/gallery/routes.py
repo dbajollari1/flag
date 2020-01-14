@@ -44,10 +44,11 @@ def gallery():
         app.logger.error(str(e), extra={'user': 'arian'})
         return redirect(url_for('errors.error'))
 
-@bpGallery.route('/uploadphoto', methods=['GET', 'POST'])
+@bpGallery.route('/uploadPhoto', methods=['GET', 'POST'])
 @login_required
-def uploadphoto():
+def uploadPhoto():
     if request.method == 'POST':
+        photoTitle = request.form['photoTitle']
         imageFile = request.files['inputImg']
 
         if imageFile.filename == "":
@@ -73,7 +74,7 @@ def uploadphoto():
 
         fix_orientation(os.path.join(UPLOAD_FOLDER, filename))
 
-        photo = Photo(0, 'photo title', filename, None, current_user.email) #, idata)
+        photo = Photo(0, photoTitle, filename, None, current_user.email) #, idata)
 
         savePhoto(photo) #save to database
         return redirect(url_for('gallery.gallery', filter='U')) #reload gallery page

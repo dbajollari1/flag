@@ -8,7 +8,9 @@ from flag.auth.models import db, User
 from flag import login_manager
 from flag.auth import bpAuth
 from flag.services.mail_api import send_email
+from datetime import date, timedelta
 import datetime
+
 
 @bpAuth.route('/login', methods=['GET', 'POST'])
 def login():
@@ -16,7 +18,7 @@ def login():
     # Bypass Login screen if user is logged in
     if current_user.is_authenticated:
         return redirect(url_for('home'))
-    print(request.args.get('next'))
+    # print(request.args.get('next'))
     login_form = LoginForm(request.form)
     # POST: Create user and redirect them to the app
     if request.method == 'POST':
@@ -32,7 +34,8 @@ def login():
                 login_user(user, remember=login_form.remember_me.data)
                 next = request.args.get('next')
                 user.last_login = datetime.datetime.now()
-                db.session.commit()
+                setMembershipStatus(user)
+                db.session.commit()              
                 return redirect(next or url_for('home')) # SUCCESSFULL LOGIN
         flash('Invalid username or password')
 
@@ -142,17 +145,8 @@ def users():
     allUsers = User.query.all()
     return render_template('auth/users.html', userList = allUsers)
 
-# @bpAuth.route('/user/<user_id>')
-# def user(user_id):
-#     if not current_user.is_authenticated:
-#         return redirect(url_for('home'))
-#     if current_user.userRole != "A":
-#         abort(401) # unauthorized
 
-#     user = User.query.filter_by(id=user_id).first()
-
-#     return render_template('auth/user.html', user = user)
-
+# Profile page (view and update)
 @bpAuth.route('/profile/<user_id>', methods=['GET', 'POST'])
 def profile(user_id = 0):
     screenMode = 'profile' #came from profile screen
@@ -197,3 +191,26 @@ def profile(user_id = 0):
             profile_form.membershipExpiryDate.data = user.memberExpireDate.strftime('%d-%b-%Y')
 
     return render_template('auth/profile.html',form=profile_form, screenMode = screenMode)
+
+# An admin renews membership for a specific user (no payment involved)
+@bpAuth.route('/renewUser/<user_id>', methods=['GET'])
+def renewUser(user_id):
+    if current_user.userRole != "A":
+        abort(401) # unauthorized
+    flash('User Membership successfully updated.')
+    return redirect(url_for('auth.profile', user_id = user_id ))
+
+
+def setMembershipStatus(user):
+    user.membershipStatus = "I" # Inactive by default
+    if user.memberStartDate is None: #no membership
+        flash('Please consider paying the membership fee to to enjoy full functionality of the website')
+    else:
+        delta = user.memberExpireDate.date() - datetime.datetime.today().date()
+        if delta.days >=0:
+            user.membershipStatus = "A" # Active membership
+            if delta.days < 30: # give a warning/reminder
+                flash('Your membership expires on ' + str(user.memberExpireDate.date()))
+        else:
+            flash('Your membership has expired. Please renew to enjoy full functionality of the website')
+        

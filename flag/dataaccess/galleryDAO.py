@@ -8,9 +8,13 @@ def getPhotos(filter = 'A', userId = ''):
     photoList = []
     photos = None
     if filter == 'U': #photos uploaded by a specific user
-        photos = execute_sql('SELECT gallery.photoId, gallery.photoTitle, gallery.photoFileName, gallery.uploadDate, gallery.uploadBy FROM gallery Where gallery.uploadBy = ? Order By uploadDate desc', (userId,))
+        photos = execute_sql('SELECT gallery.photoId, gallery.photoTitle, gallery.photoFileName, '
+        'gallery.uploadDate, flagusers.firstName, flagusers.lastName, flagusers.website '
+         'FROM gallery, flagusers Where gallery.uploadBy = flagusers.email And gallery.uploadBy = ? Order By uploadDate desc', (userId,))
     else: #all photos
-        photos = execute_sql('SELECT gallery.photoId, gallery.photoTitle, gallery.photoFileName, gallery.uploadDate, gallery.uploadBy FROM gallery Order By uploadDate desc')
+        photos = execute_sql('SELECT gallery.photoId, gallery.photoTitle, gallery.photoFileName, '
+        'gallery.uploadDate, flagusers.firstName, flagusers.lastName, flagusers.website '
+         'FROM gallery, flagusers Where gallery.uploadBy = flagusers.email Order By uploadDate desc')
 
     for row in photos:
         photo = Photo()
@@ -18,7 +22,8 @@ def getPhotos(filter = 'A', userId = ''):
         photo.photoTitle = row['photoTitle']
         photo.photoFileName = row['photoFileName']
         photo.uploadDate = row['uploadDate']
-        photo.uploadBy = row['uploadBy']
+        photo.uploadBy = row['firstName'] + ' ' + row['lastName']
+        photo.userWebsite = row['website']
         #photo.photoImg = b64encode(row['photo']).decode("utf-8")
 
         photoList.append(photo)
@@ -36,7 +41,9 @@ def deletePhoto(photoId):
 
 
 def getPhoto(photoId):
-    sql = 'SELECT gallery.photoId, gallery.photoTitle, gallery.photoFileName, gallery.uploadDate, gallery.uploadBy FROM gallery WHERE photoId = ?'
+    sql = 'SELECT gallery.photoId, gallery.photoTitle, gallery.photoFileName, gallery.uploadDate, '
+    'flagusers.firstName, flagusers.lastName, flagusers.website'
+    'FROM gallery, flagusers WHERE  gallery.uploadBy = flagusers.email And photoId = ?'
     row = execute_sql(sql, (photoId,), False, True)
 
     photo = Photo()
@@ -44,6 +51,8 @@ def getPhoto(photoId):
     photo.photoTitle = row['photoTitle']
     photo.photoFileName = row['photoFileName']
     photo.uploadDate = row['uploadDate']
-    photo.uploadBy = row['uploadBy']
+    photo.uploadBy = row['firstName'] + ' ' + row['lastName']
+    photo.userWebsite = row['website']
+    
 
     return photo

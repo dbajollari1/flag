@@ -85,7 +85,7 @@
           style="background-color: lightgrey; width: 150px;float:left;" />
         &nbsp;&nbsp;
         {% if screenMode == 'users' %}
-            <a class="btn btn-success" onclick="return confirmRenew();" role="button" href="/renew">Renew Memebership</a>
+            <a class="btn btn-success" onclick="return confirmRenew();" role="button" href="{{ url_for('auth.renewUser', user_id = form.user_id.data) }}">Renew Memebership</a>
         {% else %}
             <a class="btn btn-success" role="button" href="/membership">Renew Memebership</a>
         {% endif %}

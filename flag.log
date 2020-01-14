@@ -33,3 +33,12 @@ WHERE "flasklogin-users".id = ?]
 2019-10-14 19:18:03,722 ERROR  : Encountered unknown tag 'endfor'. You probably made a nesting mistake. Jinja is expecting this tag, but currently looking for 'elif' or 'else' or 'endif'. The innermost block that needs to be closed is 'if'. [in /Users/elinashapiro/Documents/FLAG/flag/app.py:21 in home]
 2019-10-14 20:59:52,447 ERROR  : no such table: siteamiccontent [in /Users/elinashapiro/Documents/FLAG/flag/app.py:21 in home]
 2019-10-19 12:37:30,029 ERROR  : expected token 'end of print statement', got '=' [in /Users/elinashapiro/Documents/FLAG/flag/app.py:22 in home]
+2020-01-04 20:32:56,696 ERROR  : (sqlite3.OperationalError) no such column: flagusers.membershipStatus
+[SQL: SELECT flagusers.id AS flagusers_id, flagusers."firstName" AS "flagusers_firstName", flagusers."lastName" AS "flagusers_lastName", flagusers.email AS flagusers_email, flagusers.password AS flagusers_password, flagusers.phone AS flagusers_phone, flagusers.website AS flagusers_website, flagusers."userRole" AS "flagusers_userRole", flagusers."created_On" AS "flagusers_created_On", flagusers.last_login AS flagusers_last_login, flagusers."memberStartDate" AS "flagusers_memberStartDate", flagusers."memberExpireDate" AS "flagusers_memberExpireDate", flagusers."membershipStatus" AS "flagusers_membershipStatus" 
+FROM flagusers 
+WHERE flagusers.id = ?]
+[parameters: ('1',)]
+(Background on this error at: http://sqlalche.me/e/e3q8) [in /Users/elinashapiro/Documents/FLAG/flag/app.py:22 in home]
+2020-01-12 21:27:22,975 ERROR arian : no such table: userflag [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2020-01-12 21:43:06,378 ERROR arian : 'photo' is undefined [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]
+2020-01-12 21:43:06,379 ERROR arian : 'photo' is undefined [in /Users/elinashapiro/Documents/FLAG/flag/gallery/routes.py:44 in gallery]

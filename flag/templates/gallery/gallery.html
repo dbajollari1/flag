@@ -2,6 +2,7 @@
 
 <script type="text/javascript">
     $(document).ready(function () {
+
         $("#inputImg").change(function () {
             if (this.files && this.files[0]) {
                 var reader = new FileReader();
@@ -12,10 +13,18 @@
                 reader.readAsDataURL(this.files[0]);
             }
         });
+
         $('a').click(function (e) {
+            //alert($(this).attr('data-title'));
             $('#viewImageModal img').attr('src', $(this).attr('data-img-url'));
+            $('#headerPhotoTitle').html($(this).attr('data-title'));
+            $('#headerPhotoArtist').html($(this).attr('data-name'));
+            var webSiteUrl = "<a href='" + $(this).attr('data-website') + "' target='_blank'>" + $(this).attr('data-website') + "</a>";
+            $('#headerWebsite').html(webSiteUrl); 
         });
+        
     });
+
     function ConfirmDelete() {
         return confirm("Are you sure you want to delete?");
     }
@@ -55,18 +64,16 @@
         {% for photo in photoList %}
 
         <div class="col-md-3">
-            <a id="viewPhoto" href="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"
+            <a id="viewPhoto" href=""
                 data-toggle="modal" data-target="#viewImageModal"
-                data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}">
-                <img src="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"
-                    class="img-fluid img-thumbnail" alt="alt text here"
-                    style="border-color:#d9f2d9; border-radius: 0; object-fit: cover; width: 100%; height: 200px;" />
+                data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}" 
+                data-title="{{photo.photoTitle}}" data-name="{{photo.uploadBy}}" data-website="{{photo.userWebsite}}" >
+                
+                    <img src="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"
+                        class="img-fluid img-thumbnail" alt="alt text here"
+                        style="border-color:#d9f2d9; border-radius: 0; object-fit: cover; width: 100%; height: 200px;" />
             </a>
-            <!-- <a id="viewPhoto" href="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"  
-                data-toggle="modal" data-target="#viewImageModal" data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}" >
-                    <img src="data:;base64,{{photo.photoImg}}" 
-                    class="img-fluid img-thumbnail" alt="alt text here" style="border-color:#d9f2d9; border-radius: 0;" />
-                </a> -->
+
             <figcaption class="figure-caption px-2 py-2 mb-3"
                 style="background-color: transparent;border: solid 1px #d9f2d9;">
                 {{ photo.uploadBy }}
@@ -75,6 +82,7 @@
                         href={{ url_for('gallery.removePhoto', id=photo.photoId ) }}>[Delete]</a>
                 </span>
             </figcaption>
+
         </div>
 
         {% endfor %}
@@ -84,7 +92,7 @@
 
 </div>
 
-<!-- Modal -->
+<!-- Upload Photo Modal -->
 <div class="modal fade" id="uploadImageModal" tabindex="-1" role="dialog" aria-labelledby="uploadImageModalTitle"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document">
@@ -97,9 +105,18 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="uploadphoto" method="POST" enctype="multipart/form-data">
+            <form action="uploadPhoto" method="POST" enctype="multipart/form-data">
+                
                 <div class="modal-body">
-
+                    <div class="form-group row">
+                        <label for="photoTitle" class="col-lg-1 col-form-label">
+                          Title
+                        </label>
+                        <div class="col-lg-11">
+                          <input type="text" class="form-control" id="photoTitle" name="photoTitle"
+                            placeholder="Enter Title (optional)" maxlength="50"/>
+                        </div>
+                      </div>
                     <input type="file" name="inputImg" id="inputImg" />
                     <div style="max-height: 400px; max-width: 500px; overflow: auto; padding: 10px 10px;">
                         <img id="imgPreview" src="#" alt="your image" width="100%" height="100%"
@@ -116,23 +133,26 @@
     </div>
 </div>
 
+<!-- View Photo Modal -->
 <div class="modal fade" id="viewImageModal" tabindex="-1" role="dialog" aria-labelledby="viewImageModal"
     aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-header" style="padding: 0px;">
-                <!-- <h5 class="modal-title" id="exampleModalLongTitle">
-                    View
-                </h5> -->
+            <div class="modal-header" >
+                <h6 class="modal-title" id="viewHeader">
+                    <span>Title:</span> <span id="headerPhotoTitle"></span><br>
+                    <span>Artist:</span> <span id="headerPhotoArtist"></span><br>
+                    <span>Website:</span> <span id="headerWebsite"></span>
+                </h6>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true" style="font-size: 2rem; padding-right:10px;">&times;</span>
                 </button>
             </div>
 
             <div class="modal-body">
-                <img id="myImage" class="img-fluid" src="" alt="" />
-
+                <img id="popupImage" class="img-fluid" src="" alt="" />          
             </div>
+
             <div class="modal-footer" style="padding: 5px;">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
             </div>
