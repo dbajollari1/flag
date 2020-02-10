@@ -19,8 +19,11 @@
             $('#viewImageModal img').attr('src', $(this).attr('data-img-url'));
             $('#headerPhotoTitle').html($(this).attr('data-title'));
             $('#headerPhotoArtist').html($(this).attr('data-name'));
-            var webSiteUrl = "<a href='" + $(this).attr('data-website') + "' target='_blank'>" + $(this).attr('data-website') + "</a>";
-            $('#headerWebsite').html(webSiteUrl); 
+            var userWebSite = $(this).attr('data-website');
+            if (userWebSite.includes("http") == false)
+                userWebSite = "http://" + userWebSite;
+            var webSiteUrl = "<a href='" + userWebSite + "' target='_blank'>" + $(this).attr('data-website') + "</a>";
+            $('#headerWebsite').html(webSiteUrl);
         });
         
     });
@@ -28,6 +31,11 @@
     function ConfirmDelete() {
         return confirm("Are you sure you want to delete?");
     }
+
+    function notifyUser() {
+            return alert("Please get membership to upload photos.")
+    };
+
 </script>
 
 <div class="row">
@@ -36,10 +44,16 @@
     </div>
     <div class="col-sm-6 text-right mt-2">
         {% if current_user.is_authenticated %}
-            <!-- Button trigger modal -->
-            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadImageModal">
-                Upload Photo
-            </button>
+            {% if current_user.membershipStatus == 'A' %}
+                <!-- Button trigger modal -->
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#uploadImageModal">
+                    Upload Photo
+                </button>
+            {% else %}
+                <button type="button" class="btn btn-primary" onclick="notifyUser();">
+                    Upload Photo
+                </button>
+            {% endif %}
         {% else %}
             <a href={{ url_for('gallery.gallery', filter = 'U') }}>Login to upload image</a>
         {% endif %}
@@ -52,22 +66,24 @@
         <a class="nav-link {% if filterBy == 'A' %} active {% endif %}" id="home-tab"
             href="{{ url_for('gallery.gallery', filter='A') }}" role="tab" aria-selected="true">All Photos</a>
     </li>
-    <li class="nav-item">
-        <a class="nav-link {% if filterBy == 'U' %} active {% endif %}" id="profile-tab"
-            href="{{ url_for('gallery.gallery', filter='U') }}" role="tab" aria-selected="false">My Photos</a>
-    </li>
-</ul>
+    {% if current_user.membershipStatus == 'A' %}
+        <li class="nav-item">
+            <a class="nav-link {% if filterBy == 'U' %} active {% endif %}" id="profile-tab"
+                href="{{ url_for('gallery.gallery', filter='U') }}" role="tab" aria-selected="false">My Photos</a>
+        </li>
+    {% endif %}
+    </ul>
 
 <div>
 
     <div class="row">
         {% for photo in photoList %}
 
-        <div class="col-md-3">
+        <div class="col-md-4">
             <a id="viewPhoto" href=""
                 data-toggle="modal" data-target="#viewImageModal"
                 data-img-url="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}" 
-                data-title="{{photo.photoTitle}}" data-name="{{photo.uploadBy}}" data-website="{{photo.userWebsite}}" >
+                data-title="{{photo.photoTitle}}" data-name="{{photo.userFullName}}" data-website="{{photo.userWebsite}}" >
                 
                     <img src="{{ url_for('static', filename='uploads/' + photo.photoFileName )}}"
                         class="img-fluid img-thumbnail" alt="alt text here"
@@ -76,11 +92,13 @@
 
             <figcaption class="figure-caption px-2 py-2 mb-3"
                 style="background-color: transparent;border: solid 1px #d9f2d9;">
-                {{ photo.uploadBy }}
-                <span class="float-right">
-                    <a id="deletePhoto" onclick="return ConfirmDelete();"
-                        href={{ url_for('gallery.removePhoto', id=photo.photoId ) }}>[Delete]</a>
-                </span>
+                {{ photo.userFullName }}
+                {% if current_user.userRole == 'A' or current_user.email == photo.uploadBy %}
+                    <span class="float-right">
+                        <a id="deletePhoto" onclick="return ConfirmDelete();"
+                            href={{ url_for('gallery.removePhoto', id=photo.photoId ) }}>[Delete]</a>
+                    </span>
+                {% endif %}
             </figcaption>
 
         </div>

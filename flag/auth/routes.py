@@ -27,18 +27,21 @@ def login():
         # Get Form Fields
         email = request.form.get('email')
         password = request.form.get('password')
-        # Validate Login Attempt
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if user.check_password(password=password):
-                login_user(user, remember=login_form.remember_me.data)
-                next = request.args.get('next')
-                user.last_login = datetime.datetime.now()
-                setMembershipStatus(user)
-                db.session.commit()              
-                return redirect(next or url_for('home')) # SUCCESSFULL LOGIN
-        flash('Invalid username or password')
-
+        try:
+            # Validate Login Attempt
+            user = User.query.filter_by(email=email).first()
+            if user:
+                if user.check_password(password=password):
+                    login_user(user) #, remember=login_form.remember_me.data)
+                    next = request.args.get('next')
+                    user.last_login = datetime.datetime.now()
+                    setMembershipStatus(user)
+                    db.session.commit()              
+                    return redirect(next or url_for('home')) # SUCCESSFULL LOGIN
+            flash('Invalid username or password')
+        except Exception as e:
+            app.logger.error(str(e), extra={'user': email})
+            return redirect(url_for('errors.error'))
     # GET: Serve Log-in page
     return render_template('auth/login.html',form=login_form)
 
@@ -64,10 +67,12 @@ def signup():
                             password=generate_password_hash(password, method='sha256'),
                             phone=phone,
                             last_login = datetime.datetime.now(),
-                            userRole='U')
+                            userRole='U', 
+                            membershipStatus = "I")
                 db.session.add(user)
                 db.session.commit()
                 login_user(user)
+                flash('Please consider paying the membership fee to to enjoy full functionality of the website')
                 return redirect(url_for('home'))
             flash('A user already exists with that email address.')
             return redirect(url_for('auth.signup'))
@@ -197,6 +202,17 @@ def profile(user_id = 0):
 def renewUser(user_id):
     if current_user.userRole != "A":
         abort(401) # unauthorized
+    existing_user = User.query.filter_by(id=user_id).first()
+    membershipDays = int(app.config['MEMBERSHIP_DURATION'])*365 + 1
+    if not existing_user is None:  #found user who made the payment
+        #TODO - get the start date as input from the admin
+        if existing_user.memberStartDate is None: #new membership
+            existing_user.memberStartDate = date.today()
+            existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
+        else: 
+            existing_user.memberStartDate = date.today()
+            existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
+        db.session.commit()
     flash('User Membership successfully updated.')
     return redirect(url_for('auth.profile', user_id = user_id ))
 

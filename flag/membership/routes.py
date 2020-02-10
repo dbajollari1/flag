@@ -3,7 +3,7 @@ from flag.membership import bpMembership
 from flask_login import login_required, current_user
 from flag.auth.models import db, User
 from flask import current_app as app
-from datetime import date, timedelta
+from datetime import date, timedelta, datetime
 import stripe # pip install stripe
 
 @bpMembership.route('/membership')
@@ -45,9 +45,13 @@ def extendMembership(userEmail):
         if existing_user.memberStartDate is None: #new membership
             existing_user.memberStartDate = date.today()
             existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
-        else: #TODO - use expiry date as start if memmbership not yet expired
-            existing_user.memberStartDate = date.today()
-            existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
+        else: #use expiry date if memmbership not yet expired
+            if existing_user.memberExpireDate > datetime.datetime.now():
+                existing_user.memberStartDate = existing_user.memberExpireDate
+                existing_user.memberExpireDate = existing_user.memberStartDate  + timedelta(days = membershipDays)
+            else:
+                existing_user.memberStartDate = date.today()
+                existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
         db.session.commit()
 
 
