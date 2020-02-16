@@ -37,7 +37,7 @@ def createSession(amt):
     )   
     return session.id
 
-# function is called from stripe webhook (see in app.py)
+# function is called from stripe webhook (see in app.py) after payment received
 def extendMembership(userEmail):
     existing_user = User.query.filter_by(email=userEmail).first()
     membershipDays = int(app.config['MEMBERSHIP_DURATION'])*365 + 1
@@ -52,6 +52,8 @@ def extendMembership(userEmail):
             else:
                 existing_user.memberStartDate = date.today()
                 existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
+        existing_user.membershipStatus = "A" # Active membership
+        existing_user.updatedMembership = userEmail
         db.session.commit()
 
 

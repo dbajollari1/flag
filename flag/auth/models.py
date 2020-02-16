@@ -60,8 +60,14 @@ class User(UserMixin, db.Model):
     membershipStatus = db.Column(db.String(1),
                            index=False,
                            unique=False,
-                           nullable=True)    
-
+                           nullable=True) 
+    updatedBy = db.Column(db.String(40),
+                      unique=False,
+                      nullable=False)
+    updatedMembership = db.Column(db.String(40),
+                      unique=False,
+                      nullable=False)
+    
     def set_password(self, password):
         """Create hashed password."""
         self.password = generate_password_hash(password, method='sha256')

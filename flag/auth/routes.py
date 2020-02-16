@@ -171,6 +171,7 @@ def profile(user_id = 0):
                 existing_user.lastName=lastName
                 existing_user.website=website
                 existing_user.phone=phone
+                existing_user.updatedBy = current_user.email
                 db.session.commit()
             flash('Profile successfully updated.')
             return redirect(url_for('auth.profile', user_id = userId ))
@@ -197,23 +198,24 @@ def profile(user_id = 0):
 
     return render_template('auth/profile.html',form=profile_form, screenMode = screenMode)
 
-# An admin renews membership for a specific user (no payment involved)
-@bpAuth.route('/renewUser/<user_id>', methods=['GET'])
+# An admin renews membership for a specific user (*** No payment involved ***)
+@bpAuth.route('/renewUser/<user_id>', methods=['POST'])
 def renewUser(user_id):
     if current_user.userRole != "A":
         abort(401) # unauthorized
     existing_user = User.query.filter_by(id=user_id).first()
     membershipDays = int(app.config['MEMBERSHIP_DURATION'])*365 + 1
-    if not existing_user is None:  #found user who made the payment
-        #TODO - get the start date as input from the admin
-        if existing_user.memberStartDate is None: #new membership
-            existing_user.memberStartDate = date.today()
-            existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
-        else: 
-            existing_user.memberStartDate = date.today()
-            existing_user.memberExpireDate = date.today() + timedelta(days = membershipDays)
-        db.session.commit()
-    flash('User Membership successfully updated.')
+    if not existing_user is None:
+        startDateString = request.form['startDate']
+        if not validateStartDate(startDateString):
+            flash('Please enter a valid start date in mm/dd/yyyy format.')
+        else:
+            startDate = datetime.datetime.strptime(startDateString, '%m/%d/%Y')
+            existing_user.memberStartDate = startDate
+            existing_user.memberExpireDate = startDate + timedelta(days = membershipDays)
+            existing_user.updatedMembership = current_user.email
+            db.session.commit()
+            flash('User Membership successfully updated.')
     return redirect(url_for('auth.profile', user_id = user_id ))
 
 
@@ -229,4 +231,13 @@ def setMembershipStatus(user):
                 flash('Your membership expires on ' + str(user.memberExpireDate.date()))
         else:
             flash('Your membership has expired. Please renew to enjoy full functionality of the website')
-        
+
+
+def validateStartDate(date_text):
+    try:
+        if datetime.datetime.strptime(date_text, '%m/%d/%Y'):
+            return True
+        else:
+            return False
+    except ValueError:
+        pass
