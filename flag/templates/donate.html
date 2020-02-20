@@ -27,7 +27,7 @@
 
   $( document ).ready(function() {
 
-    var stripe = Stripe('pk_test_nRpF3qQP6jxZeA13ymMY7QBl00FOgnQlKq');
+    var stripe = Stripe("{{st_pk}}");
 
       stripe.redirectToCheckout({
           // Make the id field from the Checkout Session creation API response

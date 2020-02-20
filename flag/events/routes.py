@@ -9,8 +9,12 @@ from flask import current_app as app
 
 @bpEvents.route('/events')
 def events():
-    eventList= getEvents()
-    return render_template('events/events.html', eventList = eventList)
+    try:
+        eventList= getEvents()
+        return render_template('events/events.html', eventList = eventList)
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
+        return redirect(url_for('errors.error'))
 
 @bpEvents.route('/event/<event_id>', methods=('GET', 'POST'))
 @login_required
@@ -64,15 +68,20 @@ def event(event_id = 0):
                 saveEvent(event)
             return redirect("/events") #go to events page
         except Exception as e:
-            print('failed.....' + e.args )
+            app.logger.error(str(e), extra={'user': ''})
+            return redirect(url_for('errors.error'))
 
     return render_template('events/event.html',form = form)
 
 @bpEvents.route('/removeEvent/<event_id>')
 @login_required
 def removeEvent(event_id = 0):
-    if current_user.userRole != 'A':
-        app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+    try: 
+        if current_user.userRole != 'A':
+            app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+            return redirect(url_for('errors.error'))
+        deleteEvent(event_id)
+        return redirect("/events") #reload page
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
         return redirect(url_for('errors.error'))
-    deleteEvent(event_id)
-    return redirect("/events") #reload page

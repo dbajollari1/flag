@@ -11,7 +11,7 @@ from flask_login import login_required, current_user
 #import boto
 
 UPLOAD_FOLDER = 'flag/static/uploads/'
-ALLOWED_IMAGE_EXTENSIONS = ["JPEG", "JPG", "PNG", "GIF"]
+ALLOWED_IMAGE_EXTENSIONS = ["JPEG", "JPG", "PNG", "GIF"] #, "HEIC"
 
 def get_pagePhotos(allPhotos, offset=0, per_page=6):
     return allPhotos[offset: offset + per_page]
@@ -41,53 +41,61 @@ def gallery():
                             filterBy=filterBy)
 
     except Exception as e:
-        app.logger.error(str(e), extra={'user': 'arian'})
+        app.logger.error(str(e), extra={'user': ''})
         return redirect(url_for('errors.error'))
 
 @bpGallery.route('/uploadPhoto', methods=['GET', 'POST'])
 @login_required
 def uploadPhoto():
-    if request.method == 'POST':
-        photoTitle = request.form['photoTitle']
-        imageFile = request.files['inputImg']
+    try: 
+        if request.method == 'POST':
+            photoTitle = request.form['photoTitle']
+            imageFile = request.files['inputImg']
 
-        if imageFile.filename == "":
-            print("No filename")
-            return redirect(url_for('gallery.gallery', filter='U'))
+            if imageFile.filename == "":
+                print("No filename")
+                return redirect(url_for('gallery.gallery', filter='U'))
 
-        if allowed_image(imageFile.filename):
-            filename = secure_filename(imageFile.filename)
-   
-        i = 0
-        fileExistsName = filename
-        while os.path.exists(os.path.join(UPLOAD_FOLDER, fileExistsName)):
-            i += 1
-            fileExistsName = filename.replace('.',  '_' + str(i) + '.')
-        
-        if fileExistsName != filename:
-            filename = filename.replace('.', '_' + str(i) + '.') #add number at end of file to make unique and not replace previous uploaded ones.
+            if allowed_image(imageFile.filename):
+                filename = secure_filename(imageFile.filename)
+    
+            i = 0
+            fileExistsName = filename
+            while os.path.exists(os.path.join(UPLOAD_FOLDER, fileExistsName)):
+                i += 1
+                fileExistsName = filename.replace('.',  '_' + str(i) + '.')
+            
+            if fileExistsName != filename:
+                filename = filename.replace('.', '_' + str(i) + '.') #add number at end of file to make unique and not replace previous uploaded ones.
 
-        imageFile.save(os.path.join(UPLOAD_FOLDER, filename))
-        # i = open(os.path.join(UPLOAD_FOLDER, filename), 'rb')
-        # idata = i.read()
-        # i.close
+            imageFile.save(os.path.join(UPLOAD_FOLDER, filename))
+            # i = open(os.path.join(UPLOAD_FOLDER, filename), 'rb')
+            # idata = i.read()
+            # i.close
 
-        fix_orientation(os.path.join(UPLOAD_FOLDER, filename))
+            fix_orientation(os.path.join(UPLOAD_FOLDER, filename))
 
-        photo = Photo(0, photoTitle, filename, None, current_user.email) #, idata)
+            photo = Photo(0, photoTitle, filename, None, current_user.email) #, idata)
 
-        savePhoto(photo) #save to database
-        return redirect(url_for('gallery.gallery', filter='U')) #reload gallery page
+            savePhoto(photo) #save to database
+            return redirect(url_for('gallery.gallery', filter='U')) #reload gallery page
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
+        return redirect(url_for('errors.error'))
 
 
 @bpGallery.route('/deletePhoto/<id>')
 @login_required
 def removePhoto(id):
-    photo = getPhoto(id)
-    print(id + photo.photoFileName)
-    os.remove(os.path.join(UPLOAD_FOLDER, photo.photoFileName)) #remove file
-    deletePhoto(id) #remove from database
-    return redirect("/gallery") #reload gallery page
+    try: 
+        photo = getPhoto(id)
+        print(id + photo.photoFileName)
+        os.remove(os.path.join(UPLOAD_FOLDER, photo.photoFileName)) #remove file
+        deletePhoto(id) #remove from database
+        return redirect("/gallery") #reload gallery page
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
+        return redirect(url_for('errors.error'))
 
 #private methods
 

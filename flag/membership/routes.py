@@ -16,10 +16,12 @@ def membership():
 
     amt = int(app.config['MEMBERSHIP_AMT'])
     stripeID = createSession(amt*100)  # stripe values are in cents
-    return render_template('membership/membership.html', sid=stripeID, amt='${:,.2f}'.format(amt))
+    stripe_pk = app.config['ST_PBK'] # stripe public key
+    return render_template('membership/membership.html', sid=stripeID, st_pk=stripe_pk, amt='${:,.2f}'.format(amt))
 
 
 def createSession(amt):
+    stripe.api_key = app.config['ST_PVK'] # stripe private key
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         customer_email = current_user.email,

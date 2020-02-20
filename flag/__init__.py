@@ -47,6 +47,7 @@ def create_app():
     #setup logger
     app.logger = logging.getLogger(__name__)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(user)s : %(message)s [in %(pathname)s:%(lineno)d in %(funcName)s]')
+    #write to error file (flag.log) handler
     handler = logging.handlers.RotatingFileHandler('flag.log', maxBytes=1024 * 1024, backupCount=3)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)

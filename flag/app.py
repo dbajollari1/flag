@@ -7,9 +7,8 @@ from flag.services.mail_api import send_email
 from flag.membership.routes import extendMembership
 
 app = create_app()
-stripe.api_key="sk_test_qvXYDnAVOqKg0jG4qAHyWuVT00IEP8pWcD"
 # You can find your endpoint's secret in your webhook settings
-endpoint_secret = 'whsec_olBCMlxUWYldQjQPAYQfjgbTzg0ict3R'
+endpoint_secret = app.config['ST_WEBHK']
 
 @app.route('/')
 @app.route('/home')
@@ -37,13 +36,15 @@ def donate():
       return redirect(url_for('home'))
 
   stripeID = createSession(amt*100, message)  # stripe values are in cents
-  return render_template('donate.html', sid=stripeID)
+  stripe_pk = app.config['ST_PBK'] # stripe public key
+  return render_template('donate.html', sid=stripeID, st_pk=stripe_pk)
 
 @app.route('/thanks')
 def thanks():
   return render_template('thanks.html')
 
 def createSession(amount, message):
+    stripe.api_key = app.config['ST_PVK'] # stripe private key
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         customer_email = None,

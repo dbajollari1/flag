@@ -10,11 +10,15 @@ from flask import current_app as app
 @bpSiteContent.route('/sitecontents')
 @login_required
 def sitecontents():
-    if current_user.userRole != 'A':
-        app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+    try: 
+        if current_user.userRole != 'A':
+            app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+            return redirect(url_for('errors.error'))
+        siteContentList= getSiteContents()
+        return render_template('sitecontent/sitecontents.html', siteContentList = siteContentList)
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
         return redirect(url_for('errors.error'))
-    siteContentList= getSiteContents()
-    return render_template('sitecontent/sitecontents.html', siteContentList = siteContentList)
 
 @bpSiteContent.route('/sitecontent/<siteContent_id>', methods=('GET', 'POST'))
 @login_required
@@ -54,8 +58,12 @@ def sitecontent(siteContent_id = 0):
 @bpSiteContent.route('/removeSiteContent/<siteContent_id>')
 @login_required
 def removeSiteContent(siteContent_id = 0):
-    if current_user.userRole != 'A':
-        app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+    try: 
+        if current_user.userRole != 'A':
+            app.logger.error('Unauthorized!!!!', extra={'user': current_user.email})
+            return redirect(url_for('errors.error'))
+        deleteSiteContent(siteContent_id)
+        return redirect("/sitecontents") #reload page
+    except Exception as e:
+        app.logger.error(str(e), extra={'user': ''})
         return redirect(url_for('errors.error'))
-    deleteSiteContent(siteContent_id)
-    return redirect("/sitecontents") #reload page
