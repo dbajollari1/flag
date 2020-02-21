@@ -6,6 +6,7 @@ from flag.dataaccess.homeDAO import getUpcomingEvent
 from flag.events.models import Event
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
+from flag.services.mail_api import send_email
 
 # init SQLAlchemy so we can use it later in our models
 db = SQLAlchemy()
@@ -47,13 +48,34 @@ def create_app():
     #setup logger
     app.logger = logging.getLogger(__name__)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(user)s : %(message)s [in %(pathname)s:%(lineno)d in %(funcName)s]')
+    
     #write to error file (flag.log) handler
     handler = logging.handlers.RotatingFileHandler('flag.log', maxBytes=1024 * 1024, backupCount=3)
     handler.setLevel(logging.DEBUG)
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
 
+    #email the error (see SUPPORT key in config.py)
+    emailHandler = EmailLogHandler(app.config['SUPPORT'])
+    emailHandler.setLevel(logging.ERROR)
+    emailHandler.setFormatter(formatter)
+    app.logger.addHandler(emailHandler)
+
     with app.app_context():
 	    db.create_all()
 
     return app
+
+
+class EmailLogHandler(logging.Handler):
+    def __init__(self, supportEmail):
+        logging.Handler.__init__(self)
+        self.supportEmail = supportEmail
+
+    def emit(self, record):
+        try:
+            if (record.find('EMAIL ERROR') != -1): #send email failed, dont try again
+                htmlBody = '<h4 style="color:red;">' + self.format(record) + '</hr>'
+                send_email('Fort Lee Artist Guild - ERROR', self.supportEmail, '', htmlBody)
+        except Exception as ex:
+            print(ex)

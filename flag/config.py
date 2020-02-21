@@ -2,9 +2,10 @@ import os
 
 class Config(object):
     SECRET_KEY = 'vfr'
-    ADMINS = ['dbajollari1@yahoo.com']
+    ADMINS = 'dbajollari1@yahoo.com'
     MJ_APIKEY_PUBLIC = '077fc21857d31f1f416fbf1ab7477164'
     MJ_APIKEY_PRIVATE = '03caddedf8edb44156d03585242e359a'
+    MJ_EMAIL = 'fortleeartists@gmail.com'
     SQLITE_PATH = 'db/flag.sqlite'
     SQLALCHEMY_DATABASE_URI = 'sqlite:///../db/flag.sqlite'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
@@ -17,4 +18,4 @@ class Config(object):
     MEMBERSHIP_DURATION = 1
     SITE_LOGO = 'http://127.0.0.1:5000/static/images/logo1.png'
     DONATE_SUCCESS_URL = 'http://127.0.0.1:5000/thanks'
-    SUPPORT = ['dbajollari1@yahoo.com']
+    SUPPORT = 'dbajollari1@yahoo.com'

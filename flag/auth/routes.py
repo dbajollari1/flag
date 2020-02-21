@@ -20,6 +20,7 @@ def login():
         return redirect(url_for('home'))
     # print(request.args.get('next'))
     login_form = LoginForm(request.form)
+    login_form.remember_me.data = True
     # POST: Create user and redirect them to the app
     if request.method == 'POST':
         if login_form.validate() == False:    
@@ -32,7 +33,7 @@ def login():
             user = User.query.filter_by(email=email).first()
             if user:
                 if user.check_password(password=password):
-                    login_user(user) #, remember=login_form.remember_me.data)
+                    login_user(user, remember=login_form.remember_me.data, duration=timedelta(days=5))
                     next = request.args.get('next')
                     user.last_login = datetime.datetime.now()
                     setMembershipStatus(user)
