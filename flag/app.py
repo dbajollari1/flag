@@ -7,8 +7,7 @@ from flag.services.mail_api import send_email
 from flag.membership.routes import extendMembership
 
 app = create_app()
-# You can find your endpoint's secret in your webhook settings
-endpoint_secret = app.config['ST_WEBHK']
+stripe.api_key = app.config['ST_PVK'] # stripe private key
 
 @app.route('/')
 @app.route('/home')
@@ -44,7 +43,6 @@ def thanks():
   return render_template('thanks.html')
 
 def createSession(amount, message):
-    stripe.api_key = app.config['ST_PVK'] # stripe private key
     session = stripe.checkout.Session.create(
         payment_method_types=['card'],
         customer_email = None,
@@ -65,18 +63,19 @@ def createSession(amount, message):
 
 @app.route('/flag_webhook', methods=['POST'])
 def flag_webhook():
+  try:
     # app.logger.error(request.data.decode("utf-8"), extra={'user': ''})
     try:
       payload = request.data.decode("utf-8")
     except:
       app.logger.error('coud not load payload', extra={'user': ''})
+      return "error", 400
 
     sig_header = request.headers.get("Stripe-Signature", None) # request.META['HTTP_STRIPE_SIGNATURE']
     event = None
-    try:
-      event = stripe.Webhook.construct_event(
-        payload, sig_header, endpoint_secret
-      )
+    try:   
+      endpoint_secret = app.config['ST_WEBHK'] # You can find your endpoint's secret in your webhook settings
+      event = stripe.Webhook.construct_event(payload, sig_header, endpoint_secret)
     except ValueError as e:
       # Invalid payload
       app.logger.error('Invalid payload' + str(e), extra={'user': ''})
@@ -89,10 +88,8 @@ def flag_webhook():
       return "error", 400
 
     # Handle the event
-    if event.type == 'checkout.session.completed':  #event configured in sripe webhook
-        app.logger.error('checkout.session.completed', extra={'user': ''})  
-    else:
-        return "Unexpected event type", 400
+    if event.type != 'checkout.session.completed':  #event configured in sripe webhook
+      return "Unexpected event type", 400
 
     refNbr = event.data.object.payment_intent
 
@@ -100,7 +97,7 @@ def flag_webhook():
 
       donatorMessage= ' '
       try:
-        donatorMessage = event.data.object.display_items.custom.description
+        donatorMessage = event.data.object.display_items[0].custom.description
       except:
         app.logger.error('coud not get display_items.custom.description', extra={'user': ''})
 
@@ -125,3 +122,6 @@ def flag_webhook():
 
     # app.logger.error("Received event: id={id}, type={type}, email={email}".format(id=event.id, type=event.type, email=event.data.object.customer_email))
     return 'OK', 200
+  except Exception as e:
+    app.logger.error('weeb hook failed' + str(e), extra={'user': ''})
+    return "error", 400
