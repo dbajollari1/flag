@@ -59,7 +59,7 @@ def create_app():
     emailHandler = EmailLogHandler(app.config['SUPPORT'])
     emailHandler.setLevel(logging.ERROR)
     emailHandler.setFormatter(formatter)
-    app.logger.addHandler(emailHandler)
+    #app.logger.addHandler(emailHandler)
 
     with app.app_context():
 	    db.create_all()
@@ -74,7 +74,7 @@ class EmailLogHandler(logging.Handler):
 
     def emit(self, record):
         try:
-            if (record.find('EMAIL ERROR') != -1): #send email failed, dont try again
+            if (str(record).find('EMAIL ERROR') != -1): #send email failed, dont try again
                 htmlBody = '<h4 style="color:red;">' + self.format(record) + '</hr>'
                 send_email('Fort Lee Artist Guild - ERROR', self.supportEmail, '', htmlBody)
         except Exception as ex:

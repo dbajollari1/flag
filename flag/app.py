@@ -103,10 +103,10 @@ def flag_webhook():
 
       cust = stripe.Customer.retrieve(event.data.object.customer) #get cust info
       # Email donator
-      html_body=render_template('email/thanks_note.html', ref=refNbr)
+      html_body=render_template('email/donation_thanks.html', ref=refNbr)
       send_email('Fort Lee Artist Guild - Donation Received', cust.email, '', html_body)
       # Email admin notifying of a donation
-      html_body=render_template('email/donation_note.html', message=donatorMessage, donator=cust.email)
+      html_body=render_template('email/donation_received.html', message=donatorMessage, donator=cust.email)
       send_email('Fort Lee Artist Guild - New Donation', app.config['ADMINS'], '', html_body)
 
     else: #submit_type == 'pay' - membership payment
@@ -114,10 +114,10 @@ def flag_webhook():
       userEmail = event.data.object.customer_email
       extendMembership(userEmail) #update user's membership
       # Notify user via email
-      html_body=render_template('email/thanks_note.html', ref=refNbr)
+      html_body=render_template('email/membership_thanks.html', ref=refNbr)
       send_email('Fort Lee Artist Guild - Membership payment', userEmail, '', html_body)
       # Nofify admin
-      html_body=render_template('email/donation_note.html', message='xxx', donator=userEmail)
+      html_body=render_template('email/membership_received.html', message='', member=userEmail)
       send_email('Fort Lee Artist Guild - Membership payment received', app.config['ADMINS'], '', html_body)
 
     # app.logger.error("Received event: id={id}, type={type}, email={email}".format(id=event.id, type=event.type, email=event.data.object.customer_email))
