@@ -45,4 +45,4 @@ def send_email(subject, recipientsString, text_body, html_body):
         print(result.status_code)
         # vprint(result.json())
     except Exception as e:
-        app.logger.error('EMAIL ERROR' + str(e), extra={'user': ''})
+        app.logger.error('***SEND EMAIL FAILED***' + str(e), extra={'user': ''})

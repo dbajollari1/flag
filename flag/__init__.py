@@ -48,7 +48,8 @@ def create_app():
     #setup logger
     app.logger = logging.getLogger(__name__)
     formatter = logging.Formatter('%(asctime)s %(levelname)s %(user)s : %(message)s [in %(pathname)s:%(lineno)d in %(funcName)s]')
-    
+    app.logger.setLevel(logging.DEBUG)  #email loger level is set to ERROR
+
     #write to error file (flag.log) handler
     handler = logging.handlers.RotatingFileHandler('flag.log', maxBytes=1024 * 1024, backupCount=3)
     handler.setLevel(logging.DEBUG)
@@ -59,7 +60,7 @@ def create_app():
     emailHandler = EmailLogHandler(app.config['SUPPORT'])
     emailHandler.setLevel(logging.ERROR)
     emailHandler.setFormatter(formatter)
-    #app.logger.addHandler(emailHandler)
+    app.logger.addHandler(emailHandler)
 
     with app.app_context():
 	    db.create_all()
@@ -74,8 +75,9 @@ class EmailLogHandler(logging.Handler):
 
     def emit(self, record):
         try:
-            if (str(record).find('EMAIL ERROR') != -1): #send email failed, dont try again
-                htmlBody = '<h4 style="color:red;">' + self.format(record) + '</hr>'
+            msg = self.format(record)
+            if (str(msg).find('***SEND EMAIL FAILED***') == -1): #send email failed, dont try again
+                htmlBody = '<h4 style="color:red;">' + msg + '</hr>'
                 send_email('Fort Lee Artist Guild - ERROR', self.supportEmail, '', htmlBody)
         except Exception as ex:
             print(ex)
